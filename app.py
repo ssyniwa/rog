@@ -81,5 +81,5 @@ else:
     # ログ表示
     st.write("---")
     st.write("### 冒険の記録")
-    for msg in reversed(st.session_state.log[-5:]):
+    for msg in reversed(st.session_state.log):
         st.write(f"- {msg}")
