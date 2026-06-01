@@ -50,20 +50,25 @@ else:
     # イベント選択
     st.subheader("次に行う行動を選択してください")
     events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
-    selected_events = random.sample(events, 3)
-    # ボタン押下時の処理
+    # 選択肢がまだ存在しない場合のみ生成する
+    if 'current_events' not in st.session_state:
+        st.session_state.current_events = random.sample(events, 3)
+
     cols = st.columns(3)
-    for i, event in enumerate(selected_events): # ランダムに選ばれた3つを表示
+    # 保持していた選択肢を表示
+    for i, event in enumerate(st.session_state.current_events):
         if cols[i].button(event):
-            # イベント処理
+            # --- イベント処理 ---
             if event == "回復":
                 heal = int(st.session_state.max_hp * 0.3)
                 st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + heal)
                 st.session_state.log.append(f"HPを{heal}回復した！")
             else:
                 st.session_state.log.append(f"{event}を実行した！")
+            
+            # 【重要】イベント終了後に「次の」選択肢を生成する
+            st.session_state.current_events = random.sample(events, 3)
             st.rerun()
-
     # ログ表示（リスト全体を表示）
     st.write("---")
     st.write("### 冒険の記録")
