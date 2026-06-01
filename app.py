@@ -3,18 +3,19 @@ import random
 
 # --- キャラクターデータ定義 ---
 CHARACTERS = {
-    "戦士": {"hp": 120, "attack": 15, "defense": 10, "skill": "大ダメージ"},
-    "魔法使い": {"hp": 80, "attack": 25, "defense": 5, "skill": "防御無視"},
-    "盗賊": {"hp": 100, "attack": 12, "defense": 8, "skill": "攻撃力UP"},
+    "戦士": {"hp": 120, "max_hp": 120, "attack": 15, "defense": 10, "skill": "大ダメージ"},
+    "魔法使い": {"hp": 80, "max_hp": 80, "attack": 25, "defense": 5, "skill": "防御無視"},
+    "盗賊": {"hp": 100, "max_hp": 100, "attack": 12, "defense": 8, "skill": "攻撃力UP"},
 }
 
 def init_game(char_name):
     stats = CHARACTERS[char_name]
     st.session_state.hp = stats["hp"]
-    st.session_state.max_hp = stats["hp"]
+    st.session_state.max_hp = stats["max_hp"]
     st.session_state.attack = stats["attack"]
     st.session_state.defense = stats["defense"]
     st.session_state.money = 0
+    st.session_state.level = 1
     st.session_state.char_name = char_name
     st.session_state.skills = [stats["skill"]]
     st.session_state.log = [f"{char_name}で冒険を開始した！"]
