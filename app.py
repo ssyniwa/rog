@@ -44,10 +44,10 @@ else:
     # イベント選択
     st.subheader("次に行う行動を選択してください")
     events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
-    
+    selected_events = random.sample(events, 3)
     # ボタン押下時の処理
     cols = st.columns(3)
-    for i, event in enumerate(events[:3]): # とりあえず3つ表示
+    for i, event in enumerate(selected_events): # ランダムに選ばれた3つを表示
         if cols[i].button(event):
             # イベント処理
             if event == "回復":
