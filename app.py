@@ -25,10 +25,16 @@ def init_game(char_name):
 if 'game_started' not in st.session_state:
     st.title("キャラクター選択")
     col1, col2, col3 = st.columns(3)
-    for name in CHARACTERS.keys():
-        if st.button(f"{name}を選択"):
-            init_game(name)
-            st.rerun()
+    # 各キャラクターのボタン
+    for i, (name, stats) in enumerate(CHARACTERS.items()):
+        with [col1, col2, col3][i]:
+            st.subheader(name)
+            st.write(f"HP: {stats['hp']}")
+            st.write(f"攻撃: {stats['attack']}")
+            st.write(f"初期スキル: {stats['skill']}")
+            if st.button(f"{name}を選択"):
+                init_game(name)
+                st.rerun()
 else:
     # --- ゲーム本編 ---
     st.title(f"冒険者: {st.session_state.char_name}")
