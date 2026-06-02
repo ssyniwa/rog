@@ -120,7 +120,7 @@ else:
         if cols[i].button(event):
             # 戦闘イベントの例
             if event == "戦闘":
-                st.session_state.log.append(f"戦闘開始！{st.session_state.skills[0]['name']}で攻撃！")
+                st.session_state.log.append(f"戦闘開始！")
                 if st.button("戦闘を開始する"):
                     st.session_state.current_enemy = random.choice(ENEMIES).copy()
                     st.session_state.game_mode = "BATTLE"
