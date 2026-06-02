@@ -4,20 +4,20 @@ import random
 # --- キャラクターデータ定義 ---
 # image_pathには、プロジェクト内の画像ファイルへのパスや、Web上のURLを指定してください
 CHARACTERS = {
-    "戦士": {
+    "水龍の巫女": {
         "hp": 120, "max_hp": 120, "mp": 20, "max_mp": 20, 
-        "attack": 15, "defense": 10, "skill_name": "大ダメージ", "skill_type": "攻撃",
-        "image_path": "https://placehold.co/200x200/red/white?text=Warrior"
+        "attack": 15, "defense": 10, "skill_name": "翠明流流転斬り", "skill_type": "攻撃",
+        "image_path":"image/water.png"
     },
-    "魔法使い": {
+    "風の魔女": {
         "hp": 80, "max_hp": 80, "mp": 60, "max_mp": 60, 
-        "attack": 25, "defense": 5, "skill_name": "防御無視", "skill_type": "攻撃",
-        "image_path": "https://placehold.co/200x200/blue/white?text=Mage"
+        "attack": 25, "defense": 5, "skill_name": "ウィンドカッター", "skill_type": "攻撃",
+        "image_path": "image/wind.png"
     },
-    "盗賊": {
+    "月夜の暗殺者": {
         "hp": 100, "max_hp": 100, "mp": 30, "max_mp": 30, 
-        "attack": 12, "defense": 8, "skill_name": "攻撃力UP", "skill_type": "強化",
-        "image_path": "https://placehold.co/200x200/green/white?text=Thief"
+        "attack": 12, "defense": 8, "skill_name": "シャドーナイフ", "skill_type": "攻撃",
+        "image_path": "image/shadow.png"
     },
 }
 
