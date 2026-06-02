@@ -45,7 +45,8 @@ def init_game(char_name):
     st.session_state.element = stats["element"]
     st.session_state.log = [f"{char_name}で冒険を開始した！"]
     st.session_state.game_started = True
-    st.session_state.game_mode = "MAIN" # MAIN, BATTLE
+    st.session_state.battle_mode = False
+    
 # --- メインロジック ---
 if 'game_started' not in st.session_state:
     st.title("キャラクター選択")
@@ -59,88 +60,92 @@ if 'game_started' not in st.session_state:
             if st.button(f"{name}を選択"):
                 init_game(name)
                 st.rerun()
-elif st.session_state.game_mode == "BATTLE":
-    st.title("戦闘中！")
-    enemy = st.session_state.current_enemy
+else:
+    # --- 戦闘ロジック ---
+    if st.session_state.battle_mode:
+        st.title("戦闘中！")
+        c1, c2 = st.columns(2)
+        # プレイヤー表示
+        with c1:
+            st.image(st.session_state.image_path, width=150)
+            st.write(f"**{st.session_state.char_name}**")
+            st.progress(st.session_state.hp / st.session_state.max_hp)
+            st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
+            st.progress(st.session_state.mp / st.session_state.max_mp)
+            st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
+        # 敵表示
+        with c2:
+            enemy = st.session_state.enemy
+            st.image(enemy['image'], width=150)
+            st.write(f"**{enemy['name']}**")
+            st.progress(enemy['hp'] / enemy['max_hp'])
+            st.write(f"HP: {enemy['hp']}/{enemy['max_hp']}")
 
-    # 上部ステータス表示
-    c1, c2 = st.columns(2)
-    with c1:
-        st.image(st.session_state.image_path, width=100)
-        st.write(f"**プレイヤー** (SPD:{st.session_state.speed})")
-        st.progress(st.session_state.hp / st.session_state.max_hp, text="HP")
-        st.progress(st.session_state.mp / st.session_state.max_mp, text="MP")
-    with c2:
-        st.image(enemy["image"], width=100)
-        st.write(f"**{enemy['name']}** (SPD:{enemy['speed']})")
-        st.progress(enemy["hp"] / enemy["max_hp"], text="HP")
+        # スキル選択
+        st.subheader("スキルを選択")
+        cols = st.columns(len(st.session_state.skills))
+        for i, skill in enumerate(st.session_state.skills):
+            if cols[i].button(skill['name']):
+                # 戦闘処理（簡易版）
+                damage = skill['power']
+                st.session_state.enemy['hp'] -= damage
+                st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
+                if st.session_state.enemy['hp'] <= 0:
+                    st.session_state.log.append("勝利した！")
+                    st.session_state.battle_mode = False
+                st.rerun()
+
+    else:
+        # --- 通常画面 ---
+        st.title(f"冒険者: {st.session_state.char_name}")
+        
+        with st.sidebar:
+            st.image(st.session_state.image_path, use_container_width=True)
+            st.header("ステータス")
+            st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
+            st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
+            st.write(f"攻撃力: {st.session_state.attack}")
+            st.subheader("所持スキル")
+            for s in st.session_state.skills:
+                st.write(f"- {s['name']} ({s['type']})")
+            if st.button("リセット"):
+                del st.session_state.game_started
+                st.rerun()
+
+        # 戦闘イベント時を想定した画像表示例
+        # if st.session_state.current_event == "戦闘": ... とすることで条件分岐可能
+        
+        st.subheader("次に行う行動を選択")
+        events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
+        
+        if 'current_events' not in st.session_state:
+            st.session_state.current_events = random.sample(events, 3)
+
+        cols = st.columns(3)
+        for i, event in enumerate(st.session_state.current_events):
+            if cols[i].button(event):
+                # 戦闘イベントの例
+                if event == "戦闘":
+                    st.session_state.log.append(f"戦闘開始！{st.session_state.skills[0]['name']}で攻撃！")
+                    st.session_state.enemy = random.choice(ENEMIES).copy()
+                    st.session_state.battle_mode = True
+                    st.rerun()
+                elif event == "回復":
+                    st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
+                    st.session_state.log.append("HPを回復した。")
+                elif event == "スキル獲得":
+                    if len(st.session_state.skills) < 5:
+                        new_skill = random.choice(SKILL_POOL)
+                        st.session_state.skills.append(new_skill)
+                        st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
+                    else:
+                        st.session_state.log.append("スキルスロットがいっぱいだ！")
+                else:
+                    st.session_state.log.append(f"{event}を実行した。")
+                
+                st.session_state.current_events = random.sample(events, 3)
+                st.rerun()
 
         st.write("---")
-        # スキル選択ボタン
-        st.subheader("スキルを選択")
-        for skill in st.session_state.skills:
-            if st.button(f"発動: {skill['name']} (威力:{skill['power']})"):
-                # 簡易ダメージ処理
-                dmg = skill['power']
-                enemy['hp'] -= dmg
-                st.session_state.log.append(f"{skill['name']}で{dmg}のダメージ！")
-
-                if enemy['hp'] <= 0:
-                    st.session_state.log.append("敵を倒した！")
-                    st.session_state.game_mode = "MAIN"
-                st.rerun()
-else:
-    # --- ゲーム本編 ---
-    st.title(f"冒険者: {st.session_state.char_name}")
-    
-    with st.sidebar:
-        st.image(st.session_state.image_path, use_container_width=True)
-        st.header("ステータス")
-        st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
-        st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
-        st.write(f"攻撃力: {st.session_state.attack}")
-        st.subheader("所持スキル")
-        for s in st.session_state.skills:
-            st.write(f"- {s['name']} ({s['type']})")
-        if st.button("リセット"):
-            del st.session_state.game_started
-            st.rerun()
-
-    # 戦闘イベント時を想定した画像表示例
-    # if st.session_state.current_event == "戦闘": ... とすることで条件分岐可能
-    
-    st.subheader("次に行う行動を選択")
-    events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
-    
-    if 'current_events' not in st.session_state:
-        st.session_state.current_events = random.sample(events, 3)
-
-    cols = st.columns(3)
-    for i, event in enumerate(st.session_state.current_events):
-        if cols[i].button(event):
-            # 戦闘イベントの例
-            if event == "戦闘":
-                st.session_state.log.append(f"戦闘開始！")
-                if st.button("戦闘を開始する"):
-                    st.session_state.current_enemy = random.choice(ENEMIES).copy()
-                    st.session_state.game_mode = "BATTLE"
-                    st.rerun()
-            elif event == "回復":
-                st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
-                st.session_state.log.append("HPを回復した。")
-            elif event == "スキル獲得":
-                if len(st.session_state.skills) < 5:
-                    new_skill = random.choice(SKILL_POOL)
-                    st.session_state.skills.append(new_skill)
-                    st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
-                else:
-                    st.session_state.log.append("スキルスロットがいっぱいだ！")
-            else:
-                st.session_state.log.append(f"{event}を実行した。")
-            
-            st.session_state.current_events = random.sample(events, 3)
-            st.rerun()
-
-    st.write("---")
-    for msg in reversed(st.session_state.log):
-        st.write(f"- {msg}")
+        for msg in reversed(st.session_state.log):
+            st.write(f"- {msg}")
