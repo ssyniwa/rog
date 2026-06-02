@@ -87,7 +87,7 @@ else:
         if cols[i].button(event):
             # 戦闘イベントの例
             if event == "戦闘":
-                st.session_state.log.append(f"戦闘開始！{st.session_state.skill_name}で攻撃！")
+                st.session_state.log.append(f"戦闘開始！{st.session_state.skills[0]['name']}で攻撃！")
             elif event == "回復":
                 st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
                 st.session_state.log.append("HPを回復した。")
