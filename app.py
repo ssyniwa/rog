@@ -1,25 +1,30 @@
 import streamlit as st
 import random
 
-# --- キャラクターデータ定義 ---
-# image_pathには、プロジェクト内の画像ファイルへのパスや、Web上のURLを指定してください
+# --- データ定義 ---
 CHARACTERS = {
     "水龍の巫女": {
-        "hp": 120, "max_hp": 120, "mp": 20, "max_mp": 20, 
-        "attack": 15, "defense": 10, "skill_name": "翠明流流転斬り", "skill_type": "攻撃",
-        "image_path":"image/water.png"
+        "hp": 120, "max_hp": 120, "mp": 20, "max_mp": 20, "speed": 10,
+        "attack": 15, "defense": 10, "element": "water", "image_path": "image/water.png",
+        "initial_skill": {"name": "翠明流流転斬り", "type": "攻撃", "power": 30, "turn": 1, "image": "image/water_skill1.png", "element": "water"}
     },
     "風の魔女": {
-        "hp": 80, "max_hp": 80, "mp": 60, "max_mp": 60, 
-        "attack": 25, "defense": 5, "skill_name": "ウィンドカッター", "skill_type": "攻撃",
-        "image_path": "image/wind.png"
+        "hp": 80, "max_hp": 80, "mp": 60, "max_mp": 60, "speed": 12,
+        "attack": 25, "defense": 5, "element": "wind", "image_path": "image/wind.png",
+        "initial_skill": {"name": "ウィンドカッター", "type": "攻撃", "power": 25, "turn": 1, "image": "image/wind_skill1.png", "element": "wind"}
     },
     "月夜の暗殺者": {
-        "hp": 100, "max_hp": 100, "mp": 30, "max_mp": 30, 
-        "attack": 12, "defense": 8, "skill_name": "シャドーナイフ", "skill_type": "攻撃",
-        "image_path": "image/shadow.png"
+        "hp": 100, "max_hp": 100, "mp": 30, "max_mp": 30, "speed": 14,
+        "attack": 12, "defense": 8, "element": "shadow", "image_path": "image/shadow.png",
+        "initial_skill": {"name": "シャドーナイフ", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"}
     },
 }
+
+# 獲得可能なランダムスキルのプール
+SKILL_POOL = [
+    {"name": "大回復", "type": "回復", "power": 40, "turn": 3, "image": "image/heal.png", "element": "neutral"},
+    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "neutral"}
+]
 
 def init_game(char_name):
     stats = CHARACTERS[char_name]
@@ -29,11 +34,12 @@ def init_game(char_name):
     st.session_state.max_mp = stats["max_mp"]
     st.session_state.attack = stats["attack"]
     st.session_state.defense = stats["defense"]
+    st.session_state.speed = stats["speed"]
     st.session_state.money = 0
     st.session_state.char_name = char_name
-    st.session_state.skill_name = stats["skill_name"]
-    st.session_state.skill_type = stats["skill_type"]
+    st.session_state.skills = [stats["initial_skill"]]
     st.session_state.image_path = stats["image_path"]
+    st.session_state.element = stats["element"]
     st.session_state.log = [f"{char_name}で冒険を開始した！"]
     st.session_state.game_started = True
 
@@ -46,20 +52,23 @@ if 'game_started' not in st.session_state:
             st.image(stats["image_path"], use_container_width=True)
             st.subheader(name)
             st.write(f"HP: {stats['hp']} / MP: {stats['mp']}")
-            st.write(f"スキル: {stats['skill_name']} ({stats['skill_type']})")
+            
             if st.button(f"{name}を選択"):
                 init_game(name)
                 st.rerun()
 else:
     # --- ゲーム本編 ---
     st.title(f"冒険者: {st.session_state.char_name}")
-    st.image(st.session_state.image_path, use_container_width=True)
+    
     with st.sidebar:
-        
+        st.image(st.session_state.image_path, use_container_width=True)
         st.header("ステータス")
         st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
         st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
         st.write(f"攻撃力: {st.session_state.attack}")
+        st.subheader("所持スキル")
+        for s in st.session_state.skills:
+            st.write(f"- {s['name']} ({s['type']})")
         if st.button("リセット"):
             del st.session_state.game_started
             st.rerun()
@@ -82,6 +91,13 @@ else:
             elif event == "回復":
                 st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
                 st.session_state.log.append("HPを回復した。")
+            elif event == "スキル獲得":
+                if len(st.session_state.skills) < 5:
+                    new_skill = random.choice(SKILL_POOL)
+                    st.session_state.skills.append(new_skill)
+                    st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
+                else:
+                    st.session_state.log.append("スキルスロットがいっぱいだ！")
             else:
                 st.session_state.log.append(f"{event}を実行した。")
             
