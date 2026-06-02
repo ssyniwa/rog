@@ -53,9 +53,9 @@ if 'game_started' not in st.session_state:
 else:
     # --- ゲーム本編 ---
     st.title(f"冒険者: {st.session_state.char_name}")
-    
+    st.image(st.session_state.image_path, use_container_width=True)
     with st.sidebar:
-        st.image(st.session_state.image_path, use_container_width=True)
+        
         st.header("ステータス")
         st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
         st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
