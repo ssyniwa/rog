@@ -101,7 +101,7 @@ else:
         st.subheader("スキルを選択")
         cols = st.columns(len(st.session_state.skills))
         for i, skill in enumerate(st.session_state.skills):
-            st.image(skill['image'], width=200)
+            st.image(skill['image'], width=250)
             # クールダウン中ならボタンを無効化
             is_disabled = skill['current_turn'] > 0
             if cols[i].button(skill['name'] if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
