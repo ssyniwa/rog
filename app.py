@@ -30,19 +30,19 @@ ENEMIES = [
     {
         "name": "ゴブリン", 
         "hp": 50, "max_hp": 50, "speed": 8, "attack": 10, 
-        "image": "https://placehold.co/100x100/red/white?text=Goblin",
+        "image": "image/goblin.png",
         "skills": [
-            {"name": "なぐる", "type": "攻撃", "power": 10, "image": "...", "element": "neutral"},
-            {"name": "ひっかき", "type": "攻撃", "power": 15, "image": "...", "element": "neutral"}
+            {"name": "なぐる", "type": "攻撃", "power": 10, "element": "neutral"},
+            {"name": "ひっかき", "type": "攻撃", "power": 15,  "element": "neutral"}
         ]
     },
     {
         "name": "スライム", 
         "hp": 30, "max_hp": 30, "speed": 5, "attack": 5, 
-        "image": "https://placehold.co/100x100/green/white?text=Slime",
+        "image": "image/slime.png",
         "skills": [
-            {"name": "体当たり", "type": "攻撃", "power": 8, "image": "...", "element": "neutral"},
-            {"name": "どろかけ", "type": "攻撃", "power": 5, "image": "...", "element": "earth"}
+            {"name": "体当たり", "type": "攻撃", "power": 8,  "element": "neutral"},
+            {"name": "どろかけ", "type": "攻撃", "power": 5, "element": "earth"}
         ]
     },
 ]
