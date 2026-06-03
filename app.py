@@ -21,9 +21,25 @@ CHARACTERS = {
 }
 
 # 獲得可能なランダムスキルのプール
-SKILL_POOL = [
-    {"name": "大回復", "type": "回復", "power": 40, "turn": 3, "image": "image/heal.png", "element": "neutral"},
-    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "neutral"}
+WATER_SKILL_POOL = [
+    {"name": "翠明流水沫斬り", "type": "攻撃", "power": 30, "turn": 1, "image": "image/water_a1.png", "element": "water"},  
+    {"name": "翠明流雫刃", "type": "攻撃", "power": 20, "turn": 1, "image": "image/water_a2.png", "element": "water"},
+    {"name":"翠明流流水剣逆巻き", "type": "攻撃", "power": 50, "turn": 2, "image": "image/water_a3.png", "element": "water"},
+    {"name":"翠明流連波突き", "type": "攻撃", "power": 40, "turn": 2, "image": "image/water_a4.png", "element": "water"},
+    {"name":"翠明流蒼龍昇天", "type": "攻撃", "power": 80, "turn": 3, "image": "image/water_a5.png", "element": "water"},
+    {"name":"翠明流鏡水月", "type": "攻撃", "power": 70, "turn": 3, "image": "image/water_a6.png", "element": "water"},
+    {"name":"翠明流海神葬", "type": "攻撃", "power": 100, "turn": 4, "image": "image/water_a7.png", "element": "water"},
+    {"name":"恵雨の癒し", "type": "回復", "power": 50, "turn": 2, "image": "image/water_heal.png", "element": "water"},
+    {"name":"水鏡の加護","type":"強化","power":20,"turn":2,"image":"image/water_power.png","element":"water"},
+    {"name":"水陣結界","type":"防御","power":20,"turn":2,"image":"image/water_block.png","element":"water"}
+]
+WIND_SKILL_POOL = [
+    {"name": "ウィンドカッター", "type": "攻撃", "power": 25, "turn": 1, "image": "image/wind_skill1.png", "element": "wind"},
+    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "wind"}
+]
+SHADOW_SKILL_POOL = [
+    {"name": "シャドーナイフ", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"},
+    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "shadow"}
 ]
 # --- 敵データの定義（スキル付き） ---
 ENEMIES = [
@@ -173,7 +189,12 @@ else:
                     st.session_state.log.append("HPを回復した。")
                 elif event == "スキル獲得":
                     if len(st.session_state.skills) < 5:
-                        new_skill = random.choice(SKILL_POOL).copy() # 必ず.copy()する
+                        if st.session_state.char_name == "水龍の巫女":
+                            new_skill = random.choice(WATER_SKILL_POOL).copy() # 必ず.copy()する
+                        elif st.session_state.char_name == "風の魔女":
+                            new_skill = random.choice(WIND_SKILL_POOL).copy()
+                        elif st.session_state.char_name == "月夜の暗殺者":
+                            new_skill = random.choice(SHADOW_SKILL_POOL).copy()
                         new_skill['current_turn'] = 0 # 初期値
                         st.session_state.skills.append(new_skill)
                         st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
