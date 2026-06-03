@@ -99,10 +99,10 @@ else:
                     st.session_state.hp -= enemy_dmg
                     st.session_state.log.append(f"敵の反撃！{enemy_dmg} ダメージを受けた。")
                     
-                    # プレイヤーの全スキルのクールダウンを1減らす
-                    for s in st.session_state.skills:
-                        if s['current_turn'] > 0:
-                            s['current_turn'] -= 1
+                    # プレイヤーの選択スキルのクールダウンを1減らす
+                    
+                    if st.session_state.skills[i]['current_turn'] > 0:
+                        st.session_state.skills[i]['current_turn'] -= 1
                 # 勝敗判定
                 if st.session_state.enemy['hp'] <= 0:
                     st.session_state.log.append("勝利した！")
@@ -143,9 +143,11 @@ else:
             if cols[i].button(event):
                 # 戦闘イベントの例
                 if event == "戦闘":
-                    st.session_state.log.append(f"戦闘開始！{st.session_state.skills[0]['name']}で攻撃！")
+                    st.session_state.log.append(f"戦闘開始！")
                     st.session_state.enemy = random.choice(ENEMIES).copy()
                     st.session_state.battle_mode = True
+                    for s in st.session_state.skills:
+                        s['current_turn'] = 0
                     st.rerun()
                 elif event == "回復":
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
