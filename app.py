@@ -84,7 +84,7 @@ else:
         c1, c2 = st.columns(2)
         # プレイヤー表示
         with c1:
-            st.image(st.session_state.image_path, width=300)
+            st.image(st.session_state.image_path, width=350)
             st.write(f"**{st.session_state.char_name}**")
             st.progress(st.session_state.hp / st.session_state.max_hp)
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
@@ -92,7 +92,7 @@ else:
         # 敵表示
         with c2:
             enemy = st.session_state.enemy
-            st.image(enemy['image'], width=300)
+            st.image(enemy['image'], width=350)
             st.write(f"**{enemy['name']}**")
             st.progress(enemy['hp'] / enemy['max_hp'])
             st.write(f"HP: {enemy['hp']}/{enemy['max_hp']}")
@@ -101,7 +101,7 @@ else:
         st.subheader("スキルを選択")
         cols = st.columns(len(st.session_state.skills))
         for i, skill in enumerate(st.session_state.skills):
-            st.image(skill['image'], width=150)
+            st.image(skill['image'], width=200)
             # クールダウン中ならボタンを無効化
             is_disabled = skill['current_turn'] > 0
             if cols[i].button(skill['name'] if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
