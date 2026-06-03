@@ -4,17 +4,17 @@ import random
 # --- データ定義 ---
 CHARACTERS = {
     "水龍の巫女": {
-        "hp": 120, "max_hp": 120, "mp": 20, "max_mp": 20, "speed": 10,
+        "hp": 120, "max_hp": 120,  "speed": 10,
         "attack": 15, "defense": 10, "element": "water", "image_path": "image/water.png",
         "initial_skill": {"name": "翠明流流転斬り", "type": "攻撃", "power": 30, "turn": 1, "image": "image/water_skill1.png", "element": "water"}
     },
     "風の魔女": {
-        "hp": 80, "max_hp": 80, "mp": 60, "max_mp": 60, "speed": 12,
+        "hp": 80, "max_hp": 80,  "speed": 12,
         "attack": 25, "defense": 5, "element": "wind", "image_path": "image/wind.png",
         "initial_skill": {"name": "ウィンドカッター", "type": "攻撃", "power": 25, "turn": 1, "image": "image/wind_skill1.png", "element": "wind"}
     },
     "月夜の暗殺者": {
-        "hp": 100, "max_hp": 100, "mp": 30, "max_mp": 30, "speed": 14,
+        "hp": 100, "max_hp": 100, "speed": 14,
         "attack": 12, "defense": 8, "element": "shadow", "image_path": "image/shadow.png",
         "initial_skill": {"name": "シャドーナイフ", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"}
     },
@@ -26,15 +26,14 @@ SKILL_POOL = [
     {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "neutral"}
 ]
 ENEMIES = [
-    {"name": "ゴブリン", "hp": 50, "max_hp": 50, "mp": 10, "max_mp": 10, "speed": 8, "attack": 10, "image": "https://placehold.co/100x100/red/white?text=Enemy1"},
-    {"name": "スライム", "hp": 30, "max_hp": 30, "mp": 0, "max_mp": 0, "speed": 5, "attack": 5, "image": "https://placehold.co/100x100/green/white?text=Enemy2"},
+    {"name": "ゴブリン", "hp": 50, "max_hp": 50,  "speed": 8, "attack": 10, "image": "https://placehold.co/100x100/red/white?text=Enemy1"},
+    {"name": "スライム", "hp": 30, "max_hp": 30, "speed": 5, "attack": 5, "image": "https://placehold.co/100x100/green/white?text=Enemy2"},
 ]
 def init_game(char_name):
     stats = CHARACTERS[char_name]
     st.session_state.hp = stats["hp"]
     st.session_state.max_hp = stats["max_hp"]
-    st.session_state.mp = stats["mp"]
-    st.session_state.max_mp = stats["max_mp"]
+    
     st.session_state.attack = stats["attack"]
     st.session_state.defense = stats["defense"]
     st.session_state.speed = stats["speed"]
@@ -55,7 +54,7 @@ if 'game_started' not in st.session_state:
         with cols[i]:
             st.image(stats["image_path"], use_container_width=True)
             st.subheader(name)
-            st.write(f"HP: {stats['hp']} / MP: {stats['mp']}")
+            st.write(f"HP: {stats['hp']}")
             
             if st.button(f"{name}を選択"):
                 init_game(name)
@@ -71,8 +70,7 @@ else:
             st.write(f"**{st.session_state.char_name}**")
             st.progress(st.session_state.hp / st.session_state.max_hp)
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
-            st.progress(st.session_state.mp / st.session_state.max_mp)
-            st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
+            
         # 敵表示
         with c2:
             enemy = st.session_state.enemy
@@ -103,7 +101,7 @@ else:
             st.image(st.session_state.image_path, use_container_width=True)
             st.header("ステータス")
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
-            st.write(f"MP: {st.session_state.mp}/{st.session_state.max_mp}")
+            
             st.write(f"攻撃力: {st.session_state.attack}")
             st.subheader("所持スキル")
             for s in st.session_state.skills:
