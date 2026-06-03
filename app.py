@@ -45,7 +45,8 @@ def init_game(char_name):
     st.session_state.log = [f"{char_name}で冒険を開始した！"]
     st.session_state.game_started = True
     st.session_state.battle_mode = False
-    
+    for s in st.session_state.skills:
+        s['current_turn'] = 0
 # --- メインロジック ---
 if 'game_started' not in st.session_state:
     st.title("キャラクター選択")
@@ -66,7 +67,7 @@ else:
         c1, c2 = st.columns(2)
         # プレイヤー表示
         with c1:
-            st.image(st.session_state.image_path, width=150)
+            st.image(st.session_state.image_path, width=300)
             st.write(f"**{st.session_state.char_name}**")
             st.progress(st.session_state.hp / st.session_state.max_hp)
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
@@ -74,7 +75,7 @@ else:
         # 敵表示
         with c2:
             enemy = st.session_state.enemy
-            st.image(enemy['image'], width=150)
+            st.image(enemy['image'], width=300)
             st.write(f"**{enemy['name']}**")
             st.progress(enemy['hp'] / enemy['max_hp'])
             st.write(f"HP: {enemy['hp']}/{enemy['max_hp']}")
@@ -83,16 +84,34 @@ else:
         st.subheader("スキルを選択")
         cols = st.columns(len(st.session_state.skills))
         for i, skill in enumerate(st.session_state.skills):
-            if cols[i].button(skill['name']):
+            # クールダウン中ならボタンを無効化
+            is_disabled = skill['current_turn'] > 0
+            if cols[i].button(skill['name'] if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
                 # 戦闘処理（簡易版）
                 damage = skill['power']
                 st.session_state.enemy['hp'] -= damage
                 st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
+                # スキルのクールダウンを設定
+                skill['current_turn'] = skill['turn']
+                # --- 敵の反撃処理 ---
+                if st.session_state.enemy['hp'] > 0:
+                    enemy_dmg = st.session_state.enemy['attack']
+                    st.session_state.hp -= enemy_dmg
+                    st.session_state.log.append(f"敵の反撃！{enemy_dmg} ダメージを受けた。")
+                    
+                    # プレイヤーの全スキルのクールダウンを1減らす
+                    for s in st.session_state.skills:
+                        if s['current_turn'] > 0:
+                            s['current_turn'] -= 1
+                # 勝敗判定
                 if st.session_state.enemy['hp'] <= 0:
                     st.session_state.log.append("勝利した！")
                     st.session_state.battle_mode = False
+                elif st.session_state.hp <= 0:
+                    st.session_state.log.append("敗北した...")
+                    st.session_state.game_started = False
+                
                 st.rerun()
-
     else:
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
@@ -133,7 +152,8 @@ else:
                     st.session_state.log.append("HPを回復した。")
                 elif event == "スキル獲得":
                     if len(st.session_state.skills) < 5:
-                        new_skill = random.choice(SKILL_POOL)
+                        new_skill = random.choice(SKILL_POOL).copy() # 必ず.copy()する
+                        new_skill['current_turn'] = 0 # 初期値
                         st.session_state.skills.append(new_skill)
                         st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
                     else:
