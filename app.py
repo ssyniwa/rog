@@ -25,9 +25,26 @@ SKILL_POOL = [
     {"name": "大回復", "type": "回復", "power": 40, "turn": 3, "image": "image/heal.png", "element": "neutral"},
     {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "neutral"}
 ]
+# --- 敵データの定義（スキル付き） ---
 ENEMIES = [
-    {"name": "ゴブリン", "hp": 50, "max_hp": 50,  "speed": 8, "attack": 10, "image": "https://placehold.co/100x100/red/white?text=Enemy1"},
-    {"name": "スライム", "hp": 30, "max_hp": 30, "speed": 5, "attack": 5, "image": "https://placehold.co/100x100/green/white?text=Enemy2"},
+    {
+        "name": "ゴブリン", 
+        "hp": 50, "max_hp": 50, "speed": 8, "attack": 10, 
+        "image": "https://placehold.co/100x100/red/white?text=Goblin",
+        "skills": [
+            {"name": "なぐる", "type": "攻撃", "power": 10, "image": "...", "element": "neutral"},
+            {"name": "ひっかき", "type": "攻撃", "power": 15, "image": "...", "element": "neutral"}
+        ]
+    },
+    {
+        "name": "スライム", 
+        "hp": 30, "max_hp": 30, "speed": 5, "attack": 5, 
+        "image": "https://placehold.co/100x100/green/white?text=Slime",
+        "skills": [
+            {"name": "体当たり", "type": "攻撃", "power": 8, "image": "...", "element": "neutral"},
+            {"name": "どろかけ", "type": "攻撃", "power": 5, "image": "...", "element": "earth"}
+        ]
+    },
 ]
 def init_game(char_name):
     stats = CHARACTERS[char_name]
@@ -95,9 +112,10 @@ else:
                 skill['current_turn'] = skill['turn']
                 # --- 敵の反撃処理 ---
                 if st.session_state.enemy['hp'] > 0:
-                    enemy_dmg = st.session_state.enemy['attack']
+                    enemy_skill = random.choice(st.session_state.enemy['skills'])
+                    enemy_dmg = enemy_skill['power']
                     st.session_state.hp -= enemy_dmg
-                    st.session_state.log.append(f"敵の反撃！{enemy_dmg} ダメージを受けた。")
+                    st.session_state.log.append(f"{st.session_state.enemy['name']}の「{enemy_skill['name']}」！{enemy_dmg} ダメージを受けた。")
                     
                     # プレイヤーの選択スキルのクールダウンを1減らす
                     
