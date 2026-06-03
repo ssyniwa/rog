@@ -16,7 +16,7 @@ CHARACTERS = {
     "月夜の暗殺者": {
         "hp": 100, "max_hp": 100, "speed": 14,
         "attack": 12, "defense": 8, "element": "shadow", "image_path": "image/shadow.png",
-        "initial_skill": {"name": "シャドーナイフ", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"}
+        "initial_skill": {"name": "シャドーナイフ", "type": "攻撃", "power": 40, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"}
     },
 }
 
@@ -34,12 +34,24 @@ WATER_SKILL_POOL = [
     {"name":"水陣結界","type":"防御","power":20,"turn":2,"image":"image/water_block.png","element":"water"}
 ]
 WIND_SKILL_POOL = [
-    {"name": "ウィンドカッター", "type": "攻撃", "power": 25, "turn": 1, "image": "image/wind_skill1.png", "element": "wind"},
-    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "wind"}
+    {"name": "ガストショット", "type": "攻撃", "power": 40, "turn": 1, "image": "image/winda1.png", "element": "wind"},
+    {"name": "エアリアルブレード", "type": "攻撃", "power": 50, "turn": 1, "image": "image/winda2.png", "element": "wind"},
+    {"name":"トルネードバインド", "type": "攻撃", "power": 60, "turn": 2, "image": "image/winda3.png", "element": "wind"},
+    {"name":"ハウリングストーム", "type": "攻撃", "power": 80, "turn": 3, "image": "image/winda4.png", "element": "wind"},
+    {"name":"エア・プレッシャー", "type": "攻撃", "power": 70, "turn": 3, "image": "image/winda5.png", "element": "wind"},
+    {"name":"アトモス・カタストロフ", "type": "攻撃", "power": 100, "turn": 4, "image": "image/winda6.png", "element": "wind"},
+    {"name":"ウィンド・ブリーズ", "type": "回復", "power": 60, "turn": 2, "image": "image/windheal.png", "element": "wind"},
+    {"name":"ヘイスト・ウィング","type":"強化","power":30,"turn":2,"image":"image/windpower.png","element":"wind"},
+    {"name":"エア・バリア","type":"防御","power":30,"turn":2,"image":"image/windblock.png","element":"wind"}
 ]
 SHADOW_SKILL_POOL = [
-    {"name": "シャドーナイフ", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"},
-    {"name": "防御無視の一撃", "type": "攻撃", "power": 50, "turn": 4, "image": "image/pierce.png", "element": "shadow"}
+    {"name": "シャドウスラスト", "type": "攻撃", "power": 30, "turn": 1, "image": "image/shadowa1.png", "element": "shadow"},
+    {"name": "ダークニードル", "type": "攻撃", "power": 20, "turn": 1, "image": "image/shadowa2.png", "element": "shadow"},
+    {"name":"シャドウバインド", "type": "攻撃", "power": 50, "turn": 2, "image": "image/shadowa3.png", "element": "shadow"},
+    {"name":"ダークエッジ・クロス", "type": "攻撃", "power": 70, "turn": 2, "image": "image/shadowa4.png", "element": "shadow"},
+    {"name":"ナイトメア・シザーズ", "type": "攻撃", "power": 90, "turn": 3, "image": "image/shadowa5.png", "element": "shadow"},
+    {"name":"シャドウクローン・ラッシュ", "type": "攻撃", "power": 80, "turn": 3, "image": "image/shadowa6.png", "element": "shadow"},
+    {"name":"アビス・イクリプス", "type": "攻撃", "power": 100, "turn": 4, "image": "image/shadowa7.png", "element": "shadow"},
 ]
 # --- 敵データの定義（スキル付き） ---
 ENEMIES = [
@@ -67,9 +79,14 @@ def init_game(char_name):
     st.session_state.hp = stats["hp"]
     st.session_state.max_hp = stats["max_hp"]
     
+    # ベース値を保存
+    st.session_state.base_attack = stats["attack"]
+    st.session_state.base_speed = stats["speed"]
+    # 現在の値をベース値に初期化
     st.session_state.attack = stats["attack"]
-    st.session_state.defense = stats["defense"]
     st.session_state.speed = stats["speed"]
+    st.session_state.defense = stats["defense"]
+    
     st.session_state.money = 0
     st.session_state.char_name = char_name
     st.session_state.skills = [stats["initial_skill"]]
@@ -78,6 +95,8 @@ def init_game(char_name):
     st.session_state.log = [f"{char_name}で冒険を開始した！"]
     st.session_state.game_started = True
     st.session_state.battle_mode = False
+    # バフ情報の管理リストを追加
+    st.session_state.active_buffs = []
     for s in st.session_state.skills:
         s['current_turn'] = 0
 # --- メインロジック ---
@@ -122,29 +141,64 @@ else:
             is_disabled = skill['current_turn'] > 0
             if cols[i].button(skill['name'] if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
                 # 戦闘処理（簡易版）
-                damage = skill['power']
-                st.session_state.enemy['hp'] -= damage
-                st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
+                if skill['type']=="攻撃":
+                    damage = skill['power']
+                    st.session_state.enemy['hp'] -= damage
+                    st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
+                elif skill['type']=="回復":
+                    heal = skill['power']
+                    st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + heal)
+                    st.session_state.log.append(f"{skill['name']}で {heal} HPを回復した！")
+                elif skill['type']=="防御":
+                    st.session_state.defense += skill['power']
+                    st.session_state.log.append(f"{skill['name']}で防御力が {skill['power']} 上がった！")
+                elif skill['type']=="強化":
+                    # バフを適用
+                    st.session_state.attack += skill['power']
+                    st.session_state.speed += skill['power']/10
+                    # スキルと終了ターン(残りターン)を管理リストに追加
+                    st.session_state.active_buffs.append({
+                        "power": skill['power'],
+                        "remaining_turn": skill['turn'] 
+                    })
+                    st.session_state.log.append(f"{skill['name']}で攻撃力が {skill['power']} 上がった！")
                 # スキルのクールダウンを設定
                 skill['current_turn'] = skill['turn']
                 # --- 敵の反撃処理 ---
                 if st.session_state.enemy['hp'] > 0:
                     enemy_skill = random.choice(st.session_state.enemy['skills'])
-                    enemy_dmg = enemy_skill['power']
+                    enemy_dmg = enemy_skill['power']-st.session_state.defense
                     st.session_state.hp -= enemy_dmg
                     st.session_state.log.append(f"{st.session_state.enemy['name']}の「{enemy_skill['name']}」！{enemy_dmg} ダメージを受けた。")
                     
-                    # プレイヤーの選択スキルのクールダウンを1減らす
+                # プレイヤーの選択スキルのクールダウンを1減らす
                     
-                    if st.session_state.skills[i]['current_turn'] > 0:
-                        st.session_state.skills[i]['current_turn'] -= 1
-                # 勝敗判定
-                if st.session_state.enemy['hp'] <= 0:
-                    st.session_state.log.append("勝利した！")
+                if st.session_state.skills[i]['current_turn'] > 0:
+                    st.session_state.skills[i]['current_turn'] -= 1
+                new_buffs = []
+                for buff in st.session_state.active_buffs:
+                    buff["remaining_turn"] -= 1
+                    if buff["remaining_turn"] <= 0:
+                        # ステータスを元に戻す
+                        st.session_state.attack -= buff["power"]
+                        st.session_state.speed -= buff["power"] / 10
+                        st.session_state.log.append("強化効果が切れた！")
+                    else:
+                        new_buffs.append(buff)
+                st.session_state.active_buffs = new_buffs
+                # 勝敗判定部分に追加
+                if st.session_state.enemy['hp'] <= 0 or st.session_state.hp <= 0:
+                    # 全てのバフを強制解除して元に戻す
+                    for buff in st.session_state.active_buffs:
+                        st.session_state.attack -= buff["power"]
+                        st.session_state.speed -= buff["power"] / 10
+                    st.session_state.active_buffs = []
+                    
+                    if st.session_state.enemy['hp'] <= 0:
+                        st.session_state.log.append("勝利した！")
+                    else:
+                        st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
-                elif st.session_state.hp <= 0:
-                    st.session_state.log.append("敗北した...")
-                    st.session_state.game_started = False
                 
                 st.rerun()
     else:
