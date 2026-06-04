@@ -52,6 +52,9 @@ SHADOW_SKILL_POOL = [
     {"name":"ナイトメア・シザーズ", "type": "攻撃", "power": 90, "turn": 3, "image": "image/shadowa5.png", "element": "shadow"},
     {"name":"シャドウクローン・ラッシュ", "type": "攻撃", "power": 80, "turn": 3, "image": "image/shadowa6.png", "element": "shadow"},
     {"name":"アビス・イクリプス", "type": "攻撃", "power": 100, "turn": 4, "image": "image/shadowa7.png", "element": "shadow"},
+    {"name":"シャドウヒール", "type": "回復", "power": 40, "turn": 2, "image": "image/shadowheal.png", "element": "shadow"},
+    {"name":"影の帳","type":"強化","power":25,"turn":2,"image":"image/shadowpower.png","element":"shadow"},
+    {"name":"シャドウガード","type":"防御","power":25,"turn":2,"image":"image/shadowblock.png","element":"shadow"}
 ]
 # --- 敵データの定義（スキル付き） ---
 ENEMIES = [
@@ -140,7 +143,7 @@ else:
                 st.image(skill['image'], width=250)
             # クールダウン中ならボタンを無効化
             is_disabled = skill['current_turn'] > 0
-            if cols[i].button(skill['name'] if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
+            if cols[i].button(f"{skill['type']}{skill['power']}:{skill['name']}" if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
                 # 戦闘処理（簡易版）
                 if skill['type']=="攻撃":
                     damage = skill['power']
@@ -240,7 +243,7 @@ else:
             st.write(f"攻撃力: {st.session_state.attack}")
             st.subheader("所持スキル")
             for s in st.session_state.skills:
-                st.write(f"- {s['name']} ({s['type']})")
+                st.write(f"- {s['name']} ({s['type']}{s['power']})")
             if st.button("リセット"):
                 del st.session_state.game_started
                 st.rerun()
@@ -287,7 +290,7 @@ else:
                             new_skill = random.choice(available_skills).copy()
                             new_skill['current_turn'] = 0 # 初期値
                             st.session_state.skills.append(new_skill)
-                            st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
+                            st.session_state.log.append(f"スキル「{new_skill['type']}{new_skill['power']}:{new_skill['name']}」を獲得した！")
                     else:
                         # 所持しているスキル名のリストを作成
                         owned_skill_names = [s['name'] for s in st.session_state.skills]
