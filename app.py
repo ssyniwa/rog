@@ -200,8 +200,34 @@ else:
                     else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
-                
+                st.write("---")
+                for msg in reversed(st.session_state.log):
+                    st.write(f"- {msg}")
                 st.rerun()
+    elif st.session_state.get('swapping_mode', False):
+        st.warning(f"スキルスロットがいっぱいです！新規スキル「{st.session_state.new_skill_candidate['name']}」をどうしますか？")
+        
+        col_swap, col_discard = st.columns(2)
+        
+        # 既存スキルと入れ替えるボタン
+        st.write("入れ替えるスキルを選択してください:")
+        for i, s in enumerate(st.session_state.skills):
+            if st.button(f"{s['name']} と入れ替える"):
+                st.session_state.skills[i] = st.session_state.new_skill_candidate
+                st.session_state.skills[i]['current_turn'] = 0
+                st.session_state.log.append(f"{s['name']} を捨て、{st.session_state.new_skill_candidate['name']} を習得した。")
+                st.session_state.swapping_mode = False
+                del st.session_state.new_skill_candidate
+                st.rerun()
+                
+        # 新規スキルを捨てるボタン
+        if st.button("やっぱり捨てる"):
+            st.session_state.log.append(f"新規スキル「{st.session_state.new_skill_candidate['name']}」を破棄した。")
+            st.session_state.swapping_mode = False
+            del st.session_state.new_skill_candidate
+            st.rerun()
+        
+        st.stop() # 入れ替えモード中は以下のイベント選択を表示しない 
     else:
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
@@ -254,7 +280,16 @@ else:
                         st.session_state.skills.append(new_skill)
                         st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
                     else:
-                        st.session_state.log.append("スキルスロットがいっぱいだ！")
+                        # 入れ替えモードへ遷移
+                        if st.session_state.char_name == "水龍の巫女":
+                            st.session_state.new_skill_candidate = random.choice(WATER_SKILL_POOL).copy()
+                        elif st.session_state.char_name == "風の魔女":
+                            st.session_state.new_skill_candidate = random.choice(WIND_SKILL_POOL).copy()
+                        elif st.session_state.char_name == "月夜の暗殺者":
+                            st.session_state.new_skill_candidate = random.choice(SHADOW_SKILL_POOL).copy()
+                        
+                        st.session_state.swapping_mode = True
+                        st.rerun()
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
                 
