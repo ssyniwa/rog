@@ -270,24 +270,42 @@ else:
                     st.session_state.log.append("HPを回復した。")
                 elif event == "スキル獲得":
                     if len(st.session_state.skills) < 5:
-                        if st.session_state.char_name == "水龍の巫女":
-                            new_skill = random.choice(WATER_SKILL_POOL).copy() # 必ず.copy()する
-                        elif st.session_state.char_name == "風の魔女":
-                            new_skill = random.choice(WIND_SKILL_POOL).copy()
-                        elif st.session_state.char_name == "月夜の暗殺者":
-                            new_skill = random.choice(SHADOW_SKILL_POOL).copy()
-                        new_skill['current_turn'] = 0 # 初期値
-                        st.session_state.skills.append(new_skill)
-                        st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
-                    else:
-                        # 入れ替えモードへ遷移
-                        if st.session_state.char_name == "水龍の巫女":
-                            st.session_state.new_skill_candidate = random.choice(WATER_SKILL_POOL).copy()
-                        elif st.session_state.char_name == "風の魔女":
-                            st.session_state.new_skill_candidate = random.choice(WIND_SKILL_POOL).copy()
-                        elif st.session_state.char_name == "月夜の暗殺者":
-                            st.session_state.new_skill_candidate = random.choice(SHADOW_SKILL_POOL).copy()
+                        # 所持しているスキル名のリストを作成
+                        owned_skill_names = [s['name'] for s in st.session_state.skills]
                         
+                        # キャラクターに応じたプールから、所持していないものだけを抽出
+                        if st.session_state.char_name == "水龍の巫女":
+                            pool = WATER_SKILL_POOL
+                        elif st.session_state.char_name == "風の魔女":
+                            pool = WIND_SKILL_POOL
+                        else:
+                            pool = SHADOW_SKILL_POOL
+                            
+                        available_skills = [s for s in pool if s['name'] not in owned_skill_names]
+                        
+                        if available_skills:
+                            new_skill = random.choice(available_skills).copy()
+                            new_skill['current_turn'] = 0 # 初期値
+                            st.session_state.skills.append(new_skill)
+                            st.session_state.log.append(f"スキル「{new_skill['name']}」を獲得した！")
+                    else:
+                        # 所持しているスキル名のリストを作成
+                        owned_skill_names = [s['name'] for s in st.session_state.skills]
+                        
+                        # キャラクターに応じたプールから、所持していないものだけを抽出
+                        if st.session_state.char_name == "水龍の巫女":
+                            pool = WATER_SKILL_POOL
+                        elif st.session_state.char_name == "風の魔女":
+                            pool = WIND_SKILL_POOL
+                        else:
+                            pool = SHADOW_SKILL_POOL
+                            
+                        available_skills = [s for s in pool if s['name'] not in owned_skill_names]
+                        
+                        if available_skills:
+                            new_skill = random.choice(available_skills).copy()
+                            st.session_state.new_skill_candidate = new_skill
+
                         st.session_state.swapping_mode = True
                         st.rerun()
                 else:
