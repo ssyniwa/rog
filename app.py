@@ -208,24 +208,24 @@ else:
                     st.write(f"- {msg}")
                 st.rerun()
     elif st.session_state.get('swapping_mode', False):
-        st.warning(f"スキルスロットがいっぱいです！新規スキル「{st.session_state.new_skill_candidate['name']}」をどうしますか？")
-        
+        st.warning(f"スキルスロットがいっぱいです！新規スキル「{st.session_state.new_skill_candidate['type']}{st.session_state.new_skill_candidate['power']}:{st.session_state.new_skill_candidate['name']}」をどうしますか？")
+
         col_swap, col_discard = st.columns(2)
         
         # 既存スキルと入れ替えるボタン
         st.write("入れ替えるスキルを選択してください:")
         for i, s in enumerate(st.session_state.skills):
-            if st.button(f"{s['name']} と入れ替える"):
+            if st.button(f"{s['type']}{s['power']}:{s['name']} と入れ替える"):
                 st.session_state.skills[i] = st.session_state.new_skill_candidate
                 st.session_state.skills[i]['current_turn'] = 0
-                st.session_state.log.append(f"{s['name']} を捨て、{st.session_state.new_skill_candidate['name']} を習得した。")
+                st.session_state.log.append(f"スキル「{s['type']}{s['power']}:{s['name']}」を捨て、スキル「{st.session_state.new_skill_candidate['type']}{st.session_state.new_skill_candidate['power']}:{st.session_state.new_skill_candidate['name']}」を習得した。")
                 st.session_state.swapping_mode = False
                 del st.session_state.new_skill_candidate
                 st.rerun()
                 
         # 新規スキルを捨てるボタン
         if st.button("やっぱり捨てる"):
-            st.session_state.log.append(f"新規スキル「{st.session_state.new_skill_candidate['name']}」を破棄した。")
+            st.session_state.log.append(f"新規スキル「{st.session_state.new_skill_candidate['type']}{st.session_state.new_skill_candidate['power']}:{st.session_state.new_skill_candidate['name']}」を破棄した。")
             st.session_state.swapping_mode = False
             del st.session_state.new_skill_candidate
             st.rerun()
