@@ -144,6 +144,14 @@ else:
             # クールダウン中ならボタンを無効化
             is_disabled = skill['current_turn'] > 0
             if cols[i].button(f"{skill['type']}{skill['power']}:{skill['name']}" if not is_disabled else f"{skill['name']} ({skill['current_turn']})", disabled=is_disabled):
+                # --- 速度判定による先攻・後攻の処理 ---
+                # 敵の攻撃ターン (敵のスピードがプレイヤーより高い場合、先に反撃を受ける)
+                if st.session_state.speed < st.session_state.enemy.get('speed', 0):
+                    enemy_skill = random.choice(st.session_state.enemy['skills'])
+                    enemy_dmg = max(0, enemy_skill['power'] - st.session_state.defense)
+                    st.session_state.hp -= enemy_dmg
+                    st.session_state.log.append(f"敵が速い！先制攻撃を受けた！")
+                    st.session_state.log.append(f"{st.session_state.enemy['name']}の「{enemy_skill['name']}」！{enemy_dmg} ダメージを受けた。")
                 # 戦闘処理（簡易版）
                 if skill['type']=="攻撃":
                     damage = skill['power']
