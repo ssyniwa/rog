@@ -89,7 +89,9 @@ def init_game(char_name):
     st.session_state.attack = stats["attack"]
     st.session_state.speed = stats["speed"]
     st.session_state.defense = stats["defense"]
-    
+    st.session_state.level = 1
+    st.session_state.exp = 0
+    st.session_state.exp_to_next = 100  # 次のレベルに必要な経験値
     st.session_state.money = 0
     st.session_state.char_name = char_name
     st.session_state.skills = [stats["initial_skill"]]
@@ -208,6 +210,21 @@ else:
                     
                     if st.session_state.enemy['hp'] <= 0:
                         st.session_state.log.append("勝利した！")
+                        # --- 経験値獲得とレベルアップ判定 ---
+                        gained_exp = 50  # 敵ごとに設定しても良い
+                        st.session_state.exp += gained_exp
+                        st.session_state.log.append(f"{gained_exp} の経験値を獲得した！")
+                        
+                        if st.session_state.exp >= st.session_state.exp_to_next:
+                            st.session_state.level += 1
+                            st.session_state.exp -= st.session_state.exp_to_next
+                            st.session_state.exp_to_next = int(st.session_state.exp_to_next * 1.5) # 次のレベルは少し大変に
+                            
+                            # ステータス強化
+                            st.session_state.max_hp += 20
+                            st.session_state.hp = st.session_state.max_hp
+                            st.session_state.attack += 5
+                            st.session_state.log.append(f"レベルアップ！Lv.{st.session_state.level}になった！")
                     else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
@@ -247,7 +264,8 @@ else:
             st.image(st.session_state.image_path, use_container_width=True)
             st.header("ステータス")
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
-            
+            st.write(f"Lv: {st.session_state.level}") # 追加
+            st.write(f"EXP: {st.session_state.exp} / {st.session_state.exp_to_next}") # 追加
             st.write(f"攻撃力: {st.session_state.attack}")
             st.subheader("所持スキル")
             for s in st.session_state.skills:
