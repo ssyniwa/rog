@@ -228,10 +228,11 @@ else:
                     else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
-                st.write("---")
-                for msg in reversed(st.session_state.log):
-                    st.write(f"- {msg}")
                 st.rerun()
+        st.write("---")
+        for msg in reversed(st.session_state.log):
+            st.write(f"- {msg}")
+                
     elif st.session_state.get('swapping_mode', False):
         st.warning(f"スキルスロットがいっぱいです！新規スキル「{st.session_state.new_skill_candidate['type']}{st.session_state.new_skill_candidate['power']}:{st.session_state.new_skill_candidate['name']}」をどうしますか？")
 
