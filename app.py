@@ -452,7 +452,7 @@ if 'game_started' not in st.session_state:
     cols = st.columns(3)
     for i, (name, stats) in enumerate(CHARACTERS.items()):
         with cols[i]:
-            st.image(stats["image_path"], use_container_width=True)
+            st.image(stats["image_path"], width='stretch')
             st.subheader(name)
             st.write(f"HP: {stats['hp']}")
             
@@ -654,7 +654,7 @@ else:
         st.title(f"冒険者: {st.session_state.char_name}")
         st.subheader(f"現在階層: {st.session_state.floor} F")
         with st.sidebar:
-            st.image(st.session_state.image_path, use_container_width=True)
+            st.image(st.session_state.image_path, width='stretch')
             st.header("ステータス")
             st.write(f"HP: {st.session_state.hp}/{st.session_state.max_hp}")
             st.write(f"Lv: {st.session_state.level}") # 追加
