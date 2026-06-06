@@ -571,6 +571,8 @@ else:
                         st.session_state.log.append(f"敵は身構えて{st.session_state.enemy_defense}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
+                        enemy_dmg = enemy_skill['power']-st.session_state.defense
+                        st.session_state.hp -= enemy_dmg
                         # 継続ダメージ（毒など）をプレイヤーに付与する処理
                         st.session_state.poison_damage = enemy_skill['power']
                         st.session_state.poison_turn = 3 # 3ターンの間
