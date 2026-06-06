@@ -744,7 +744,7 @@ else:
                     st.session_state.log.append(f"{event}を実行した。")
                     
                 # 階層が20の倍数（ボス階層）の場合は「戦闘」のみにする
-                if st.session_state.floor % 20 == 0:
+                if st.session_state.floor % 20 == 19:
                     st.session_state.current_events = ["戦闘"]
                     st.session_state.log.append("エリアボスが出現！")
                 else:
