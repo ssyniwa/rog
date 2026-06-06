@@ -748,7 +748,7 @@ else:
                     st.session_state.log.append(f"{event}を実行した。")
                     st.session_state.floor += 1
                 
-                st.session_state.current_events = random.sample(events, 3)
+                
                 
                 st.rerun()
 
