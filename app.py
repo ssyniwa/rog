@@ -60,7 +60,7 @@ SHADOW_SKILL_POOL = [
 ENEMIES = [
     {
         "name": "ゴブリン", "type": "mob", "floor_range": (1, 19),
-        "hp": 50, "max_hp": 50, "speed": 8, "attack": 10, 
+        "hp": 50, "max_hp": 50, "speed": 8, "attack": 10, "defense":0,
         "image": "image/goblin.png",
         "skills": [
             {"name": "なぐる", "type": "攻撃", "power": 10, "element": "none"},
@@ -69,7 +69,7 @@ ENEMIES = [
     },
     {
         "name": "スライム", "type": "mob", "floor_range": (1, 19),
-        "hp": 30, "max_hp": 30, "speed": 5, "attack": 5, 
+        "hp": 30, "max_hp": 30, "speed": 5, "attack": 5,  "defense":0,
         "image": "image/slime.png",
         "skills": [
             {"name": "体当たり", "type": "攻撃", "power": 8,  "element": "none"},
@@ -78,7 +78,7 @@ ENEMIES = [
     },
     {
         "name":"草むらトカゲ", "type": "mob", "floor_range": (1, 19),
-        "hp": 40, "max_hp": 40, "speed": 10, "attack": 8,
+        "hp": 40, "max_hp": 40, "speed": 10, "attack": 8, "defense":0,
           "image": "image/st1en1.png",
         "skills":[
          {"name": "かみつく", "type": "攻撃", "power": 8, "element": "none"},
@@ -87,7 +87,7 @@ ENEMIES = [
     },
     {
         "name": "蜂の兵隊","type": "mob", "floor_range": (1, 19),
-        "hp": 35, "max_hp": 35, "speed": 12, "attack": 12,
+        "hp": 35, "max_hp": 35, "speed": 12, "attack": 12, "defense":0,
         "image": "image/st1en2.png",
         "skills": [
             {"name": "ハチの針", "type": "継続", "power": 12, "element": "none"},
@@ -96,7 +96,7 @@ ENEMIES = [
     },
     {
         "name":"野犬","type": "mob", "floor_range": (1, 19),
-        "hp": 45, "max_hp": 45, "speed": 11, "attack": 13,
+        "hp": 45, "max_hp": 45, "speed": 11, "attack": 13, "defense":0,
         "image": "image/st1en3.png",
         "skills":[
             {"name": "かみつく", "type": "攻撃", "power": 13, "element": "none"},
@@ -105,7 +105,7 @@ ENEMIES = [
     },
     {
         "name":"大王スライム","type": "boss", "floor": 20,
-        "hp": 100, "max_hp": 100, "speed": 5, "attack": 20,
+        "hp": 100, "max_hp": 100, "speed": 5, "attack": 20, "defense":0,
         "image": "image/st1en4.png",
         "skills":[
             {"name": "スライムボール", "type": "継続", "power": 25, "element": "none"},
@@ -114,7 +114,7 @@ ENEMIES = [
     },
     {
         "name":"ロックゴーレム","type": "mob", "floor_range": (21, 39),
-        "hp": 80, "max_hp": 80, "speed": 4, "attack": 25,
+        "hp": 80, "max_hp": 80, "speed": 4, "attack": 25, "defense":0,
         "image": "image/st2en1.png",
         "skills":[
             {"name": "岩石投げ", "type": "攻撃", "power": 30, "element": "rock"},
@@ -123,7 +123,7 @@ ENEMIES = [
     },
     {
         "name":"影の亡霊","type": "mob", "floor_range": (21, 39),
-        "hp": 60, "max_hp": 60, "speed": 9, "attack": 18,
+        "hp": 60, "max_hp": 60, "speed": 9, "attack": 18, "defense":0,
         "image": "image/st2en2.png",
         "skills":[
             {"name": "シャドウスラスト", "type": "攻撃", "power": 30, "element": "shadow"},
@@ -132,7 +132,7 @@ ENEMIES = [
     },
     {
         "name":"洞窟コウモリ","type": "mob", "floor_range": (21, 39),
-        "hp": 70, "max_hp": 70, "speed": 12, "attack": 20,
+        "hp": 70, "max_hp": 70, "speed": 12, "attack": 20, "defense":0,
         "image": "image/st2en3.png",
         "skills":[
             {"name": "かみつく", "type": "攻撃", "power": 18, "element": "none"},
@@ -141,7 +141,7 @@ ENEMIES = [
     },
     {
         "name":"地底グモ","type": "mob", "floor_range": (21, 39),
-        "hp": 70, "max_hp": 70, "speed": 10, "attack": 15,
+        "hp": 70, "max_hp": 70, "speed": 10, "attack": 15, "defense":0,
         "image": "image/st2en4.png",
         "skills":[
             {"name": "糸を張る", "type": "攻撃", "power": 30, "element": "shadow"},
@@ -150,7 +150,7 @@ ENEMIES = [
     },
     {
         "name":"闇の鎧騎士","type": "mob", "floor_range": (21, 39),
-        "hp": 90, "max_hp": 90, "speed": 6, "attack": 25,
+        "hp": 90, "max_hp": 90, "speed": 6, "attack": 25, "defense":0,
         "image": "image/st2en5.png",
         "skills":[
             {"name": "ダークスラスト", "type": "攻撃", "power": 50, "element": "shadow"},
@@ -159,7 +159,7 @@ ENEMIES = [
     },
     {
         "name":"暗黒地殻獣","type": "boss", "floor": 40,
-        "hp": 200, "max_hp": 200, "speed": 5, "attack": 30,
+        "hp": 200, "max_hp": 200, "speed": 5, "attack": 30, "defense":0,
         "image": "image/st2en6.png",
         "skills":[
             {"name": "地殻変動", "type": "攻撃", "power": 60, "element": "rock"},
@@ -170,7 +170,7 @@ ENEMIES = [
     },
     {
         "name":"イフリート","type": "mob", "floor_range": (41, 59),
-        "hp": 120, "max_hp": 120, "speed": 10, "attack": 35,
+        "hp": 120, "max_hp": 120, "speed": 10, "attack": 35, "defense":0,
         "image": "image/st3en1.png",
         "skills":[
             {"name": "炎の嵐", "type": "攻撃", "power": 60, "element": "fire"},
@@ -179,7 +179,7 @@ ENEMIES = [
     },
     {
         "name":"溶岩亀","type": "mob", "floor_range": (41, 59),
-        "hp": 150, "max_hp": 150, "speed": 5, "attack": 40,
+        "hp": 150, "max_hp": 150, "speed": 5, "attack": 40, "defense":0,
         "image": "image/st3en2.png",
         "skills":[
             {"name": "溶岩弾", "type": "継続", "power": 60, "element": "fire"},
@@ -188,7 +188,7 @@ ENEMIES = [
     },
     {
         "name":"フェニックス","type": "mob", "floor_range": (41, 59),
-        "hp": 120, "max_hp": 120, "speed": 12, "attack": 35,
+        "hp": 120, "max_hp": 120, "speed": 12, "attack": 35, "defense":0,
         "image": "image/st3en3.png",
         "skills":[
             {"name": "炎の翼撃", "type": "攻撃", "power": 50, "element": "fire"},
@@ -197,7 +197,7 @@ ENEMIES = [
     },
     {
         "name":"マグマゴーレム","type": "mob", "floor_range": (41, 59),
-        "hp": 200, "max_hp": 200, "speed": 4, "attack": 45,
+        "hp": 200, "max_hp": 200, "speed": 4, "attack": 45, "defense":0,
         "image": "image/st3en4.png",
         "skills":[
             {"name": "マグマ投げ", "type": "攻撃", "power": 70, "element": "fire"},
@@ -206,7 +206,7 @@ ENEMIES = [
     },
     {
         "name":"地獄の炎の魔術師","type": "mob", "floor_range": (41, 59),
-        "hp": 150, "max_hp": 150, "speed": 6, "attack": 40,
+        "hp": 150, "max_hp": 150, "speed": 6, "attack": 40, "defense":0,
         "image": "image/st3en5.png",
         "skills":[
             {"name": "地獄の炎", "type": "継続", "power": 60, "element": "fire"},
@@ -215,7 +215,7 @@ ENEMIES = [
     },
     {
         "name":"灼熱の焔龍","type": "boss", "floor": 60,
-        "hp": 300, "max_hp": 300, "speed": 8, "attack": 50,
+        "hp": 300, "max_hp": 300, "speed": 8, "attack": 50, "defense":0,
         "image": "image/st3en6.png",
         "skills":[
             {"name": "インフェルノブレス", "type": "攻撃", "power": 80, "element": "fire"},
@@ -226,7 +226,7 @@ ENEMIES = [
     },
     {
         "name":"氷の妖精","type": "mob", "floor_range": (61, 79),
-        "hp": 200, "max_hp": 200, "speed": 12, "attack": 25,
+        "hp": 200, "max_hp": 200, "speed": 12, "attack": 25, "defense":0,
         "image": "image/st4en1.png",
         "skills":[
             {"name": "氷のいたずら", "type": "攻撃", "power": 70, "element": "ice"},
@@ -234,7 +234,7 @@ ENEMIES = [
         ]
     },
     {
-        "name":"雪狼","type": "mob", "floor_range": (61, 79),
+        "name":"雪狼","type": "mob", "floor_range": (61, 79), "defense":0,
         "hp": 220, "max_hp": 220, "speed": 12, "attack": 30,
         "image": "image/st4en2.png",
         "skills":[
@@ -243,7 +243,7 @@ ENEMIES = [
         ]
     },
     {
-        "name":"氷塊兵","type": "mob", "floor_range": (61, 79),
+        "name":"氷塊兵","type": "mob", "floor_range": (61, 79), "defense":0,
         "hp": 250, "max_hp": 250, "speed": 10, "attack": 25,
         "image": "image/st4en3.png",
         "skills":[
@@ -253,7 +253,7 @@ ENEMIES = [
     },
     {
         "name":"ブリザードコウモリ","type": "mob", "floor_range": (61, 79),
-        "hp": 200, "max_hp": 200, "speed": 12, "attack": 30,
+        "hp": 200, "max_hp": 200, "speed": 12, "attack": 30, "defense":0,
         "image": "image/st4en4.png",
         "skills":[
             {"name": "氷の超音波", "type": "攻撃", "power": 70, "element": "ice"},
@@ -262,7 +262,7 @@ ENEMIES = [
     },
     {
         "name":"氷の魔像","type": "mob", "floor_range": (61, 79),
-        "hp": 250, "max_hp": 250, "speed": 10, "attack": 25,
+        "hp": 250, "max_hp": 250, "speed": 10, "attack": 25, "defense":0,
         "image": "image/st4en5.png",
         "skills":[
             {"name": "氷の彗星", "type": "攻撃", "power": 90, "element": "ice"},
@@ -271,7 +271,7 @@ ENEMIES = [
     },
     {
         "name":"氷華の魔女","type": "boss", "floor": 80,
-        "hp": 400, "max_hp": 400, "speed": 12, "attack": 30,
+        "hp": 400, "max_hp": 400, "speed": 12, "attack": 30, "defense":0,
         "image": "image/st4en6.png",
         "skills":[
             {"name": "氷の華", "type": "攻撃", "power": 100, "element": "ice"},
@@ -283,7 +283,7 @@ ENEMIES = [
     },
     {
         "name":"警備ドローン","type": "mob", "floor_range": (81, 99),
-        "hp": 300, "max_hp": 300, "speed": 12, "attack": 20,
+        "hp": 300, "max_hp": 300, "speed": 12, "attack": 20, "defense":0,
         "image": "image/st5en1.png",
         "skills":[
             {"name": "レーザー", "type": "攻撃", "power": 100, "element": "thunder"},
@@ -292,7 +292,7 @@ ENEMIES = [
     },
     {
         "name":"電撃スライム","type": "mob", "floor_range": (81, 99),
-        "hp": 320, "max_hp": 320, "speed": 12, "attack": 30,
+        "hp": 320, "max_hp": 320, "speed": 12, "attack": 30, "defense":0,
         "image": "image/st5en2.png",
         "skills":[
             {"name": "電撃弾", "type": "攻撃", "power": 120, "element": "thunder"},
@@ -301,7 +301,7 @@ ENEMIES = [
     },
     {
         "name":"サイバー忍者","type": "mob", "floor_range": (81, 99),
-        "hp": 350, "max_hp": 350, "speed": 14, "attack": 40,
+        "hp": 350, "max_hp": 350, "speed": 14, "attack": 40, "defense":0,
         "image": "image/st5en3.png",
         "skills":[
             {"name": "サイバー斬撃", "type": "攻撃", "power": 130, "element": "thunder"},
@@ -310,7 +310,7 @@ ENEMIES = [
     },
     {
         "name":"自動砲塔","type": "mob", "floor_range": (81, 99),
-        "hp": 360, "max_hp": 360, "speed": 10, "attack": 50,
+        "hp": 360, "max_hp": 360, "speed": 10, "attack": 50, "defense":0,
         "image": "image/st5en4.png",
         "skills":[
             {"name": "自動射撃", "type": "攻撃", "power": 150, "element": "thunder"},
@@ -319,7 +319,7 @@ ENEMIES = [
     },
     {
         "name":"ハッキングコア","type": "mob", "floor_range": (81, 99),
-        "hp": 360, "max_hp": 360, "speed": 12, "attack": 40,
+        "hp": 360, "max_hp": 360, "speed": 12, "attack": 40, "defense":0,
         "image": "image/st5en5.png",
         "skills":[
             {"name": "ハッキング", "type": "攻撃", "power": 120, "element": "thunder"},
@@ -328,7 +328,7 @@ ENEMIES = [
     },
     {
         "name":"量産型AI軍団","type": "boss", "floor": 100,
-        "hp": 400, "max_hp": 400, "speed": 10, "attack": 50,
+        "hp": 400, "max_hp": 400, "speed": 10, "attack": 50, "defense":0,
         "image": "image/st5en6.png",
         "skills":[
             {"name": "一斉掃射", "type": "攻撃", "power": 200, "element": "thunder"},
@@ -340,7 +340,7 @@ ENEMIES = [
     
     {
         "name":"虚無の騎士","type": "mob", "floor_range": (101, 119),
-        "hp": 420, "max_hp": 420, "speed": 10, "attack": 60,
+        "hp": 420, "max_hp": 420, "speed": 10, "attack": 60, "defense":0,
         "image": "image/st6en1.png",
         "skills":[
             {"name": "虚無の刃", "type": "攻撃", "power": 200, "element": "none"},
@@ -349,7 +349,7 @@ ENEMIES = [
     },
     {
         "name":"時間の澱み","type": "mob", "floor_range": (101, 119),
-        "hp": 430, "max_hp": 430, "speed": 10, "attack": 50,
+        "hp": 430, "max_hp": 430, "speed": 10, "attack": 50, "defense":0,
         "image": "image/st6en2.png",
         "skills":[
             {"name": "時間停止", "type": "攻撃", "power": 220, "element": "none"},
@@ -358,7 +358,7 @@ ENEMIES = [
     },
     {
         "name":"空間歪曲獣","type": "mob", "floor_range": (101, 119),
-        "hp": 450, "max_hp": 450, "speed": 10, "attack": 55,
+        "hp": 450, "max_hp": 450, "speed": 10, "attack": 55, "defense":0,
         "image": "image/st6en3.png",
         "skills":[
             {"name": "空間歪曲", "type": "攻撃", "power": 250, "element": "none"},
@@ -367,7 +367,7 @@ ENEMIES = [
     },
     {
         "name":"パラレル分身","type": "mob", "floor_range": (101, 119),
-        "hp": 450, "max_hp": 450, "speed": 12, "attack": 40,
+        "hp": 450, "max_hp": 450, "speed": 12, "attack": 40, "defense":0,
         "image": "image/st6en4.png",
         "skills":[
             {"name": "分身の術", "type": "攻撃", "power": 250, "element": "none"},
@@ -376,7 +376,7 @@ ENEMIES = [
     },
     {
         "name":"終焉の観測者","type": "mob", "floor_range": (101, 119),
-        "hp": 470, "max_hp": 470, "speed": 10, "attack": 60,
+        "hp": 470, "max_hp": 470, "speed": 10, "attack": 60, "defense":0,
         "image": "image/st6en5.png",
         "skills":[
             {"name": "終焉の刃", "type": "攻撃", "power": 270, "element": "none"},
@@ -385,7 +385,7 @@ ENEMIES = [
     },
     {
         "name":"時空の観測者","type": "boss", "floor": 120,
-        "hp": 500, "max_hp": 500, "speed": 10, "attack": 60,
+        "hp": 500, "max_hp": 500, "speed": 10, "attack": 60, "defense":0,
         "image": "image/st6en6.png",
         "skills":[
             {"name": "時空の刃", "type": "攻撃", "power": 300, "element": "none"},
@@ -518,8 +518,8 @@ else:
 
                     elif enemy_skill['type'] == "防御":
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
-                        st.session_state.enemy_defense += enemy_skill['power']
-                        st.session_state.log.append(f"敵は身構えて{st.session_state.enemy_defense}防御を固めた！")
+                        st.session_state.enemy["defense"] += enemy_skill['power']
+                        st.session_state.log.append(f"敵は身構えて{st.st.session_state.enemy["defense"]}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
                         # 継続ダメージ（毒など）をプレイヤーに付与する処理
@@ -529,7 +529,7 @@ else:
                 # 戦闘処理（簡易版）
                 if skill['type']=="攻撃":
                     damage = skill['power']
-                    st.session_state.enemy['hp'] -= damage-st.session_state.enemy_defense
+                    st.session_state.enemy['hp'] -= damage-st.session_state.enemy["defense"]
                     st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
                 elif skill['type']=="回復":
                     heal = skill['power']
@@ -566,9 +566,10 @@ else:
                         st.session_state.log.append(f"敵の体力が {heal_amount} 回復した。")
 
                     elif enemy_skill['type'] == "防御":
+                        
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
-                        st.session_state.enemy_defense += enemy_skill['power']
-                        st.session_state.log.append(f"敵は身構えて{st.session_state.enemy_defense}防御を固めた！")
+                        st.session_state.enemy["defense"] += enemy_skill['power']
+                        st.session_state.log.append(f"敵は身構えて{st.session_state.enemy["defense"]}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
                         enemy_dmg = enemy_skill['power']-st.session_state.defense
