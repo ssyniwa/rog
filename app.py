@@ -549,7 +549,7 @@ else:
                     })
                     st.session_state.log.append(f"{skill['name']}で攻撃力が {skill['power']} 上がった！")
                 # スキルのクールダウンを設定
-                skill['current_turn'] = skill['turn']
+                skill['current_turn'] = skill['turn']-1
                 # --- 敵の反撃処理 ---
                 if st.session_state.enemy['hp'] > 0:
                     enemy_skill = random.choice(st.session_state.enemy['skills'])
