@@ -696,10 +696,12 @@ else:
                     st.session_state.poison_damage=0
                     for s in st.session_state.skills:
                         s['current_turn'] = 0
+                    st.session_state.floor += 1
                     st.rerun()
                 elif event == "回復":
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
                     st.session_state.log.append("HPを回復した。")
+                    st.session_state.floor += 1
                 elif event == "スキル獲得":
                     if len(st.session_state.skills) < 5:
                         # 所持しているスキル名のリストを作成
@@ -720,6 +722,7 @@ else:
                             new_skill['current_turn'] = 0 # 初期値
                             st.session_state.skills.append(new_skill)
                             st.session_state.log.append(f"スキル「{new_skill['type']}{new_skill['power']}:{new_skill['name']}」を獲得した！")
+                        st.session_state.floor += 1
                     else:
                         # 所持しているスキル名のリストを作成
                         owned_skill_names = [s['name'] for s in st.session_state.skills]
@@ -739,12 +742,14 @@ else:
                             st.session_state.new_skill_candidate = new_skill
 
                         st.session_state.swapping_mode = True
+                        st.session_state.floor += 1
                         st.rerun()
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
+                    st.session_state.floor += 1
                 
                 st.session_state.current_events = random.sample(events, 3)
-                st.session_state.floor += 1
+                
                 st.rerun()
 
         st.write("---")
