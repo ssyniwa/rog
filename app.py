@@ -620,7 +620,7 @@ else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
                 st.rerun()
-        st.session_state.floor += 1
+        
         st.write("---")
         for msg in reversed(st.session_state.log):
             st.write(f"- {msg}")
@@ -699,7 +699,7 @@ else:
                         s['current_turn'] = 0
                     
                     st.rerun()
-                    
+                    st.session_state.floor += 1
                 elif event == "回復":
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
                     st.session_state.log.append("HPを回復した。")
