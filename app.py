@@ -672,14 +672,7 @@ else:
         
         st.subheader("次に行う行動を選択")
         events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
-        # 階層が20の倍数（ボス階層）の場合は「戦闘」のみにする
-        if st.session_state.floor % 20 == 0:
-            st.session_state.current_events = ["戦闘"]
-            st.session_state.log.append("エリアボスが出現！")
-        else:
-            # 通常階層ならランダムに3つ
-                    
-                    
+        if 'current_events' not in st.session_state:
             st.session_state.current_events = random.sample(events, 3)
         
 
@@ -698,7 +691,7 @@ else:
                     for s in st.session_state.skills:
                         s['current_turn'] = 0
                     
-                    st.rerun()
+                    
                     
                 elif event == "回復":
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
@@ -745,7 +738,7 @@ else:
 
                         st.session_state.swapping_mode = True
                         
-                        st.rerun()
+                        
                     
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
