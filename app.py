@@ -519,7 +519,7 @@ else:
                     elif enemy_skill['type'] == "防御":
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
                         st.session_state.enemy["defense"] += enemy_skill['power']
-                        st.session_state.log.append(f"敵は身構えて{st.st.session_state.enemy["defense"]}防御を固めた！")
+                        st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
                         # 継続ダメージ（毒など）をプレイヤーに付与する処理
@@ -569,7 +569,7 @@ else:
                         
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
                         st.session_state.enemy["defense"] += enemy_skill['power']
-                        st.session_state.log.append(f"敵は身構えて{st.session_state.enemy["defense"]}防御を固めた！")
+                        st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
                         enemy_dmg = enemy_skill['power']-st.session_state.defense
