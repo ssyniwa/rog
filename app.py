@@ -686,7 +686,7 @@ else:
         cols = st.columns(len(st.session_state.current_events))
         for i, event in enumerate(st.session_state.current_events):
             if cols[i].button(event):
-                
+                st.session_state.floor += 1
                 # 戦闘イベントの例
                 if event == "戦闘":
                     st.session_state.log.append(f"戦闘開始！")
@@ -699,11 +699,11 @@ else:
                         s['current_turn'] = 0
                     
                     st.rerun()
-                    st.session_state.floor += 1
+                    
                 elif event == "回復":
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
                     st.session_state.log.append("HPを回復した。")
-                    st.session_state.floor += 1
+                    
                 elif event == "スキル獲得":
                     if len(st.session_state.skills) < 5:
                         # 所持しているスキル名のリストを作成
@@ -746,10 +746,10 @@ else:
                         st.session_state.swapping_mode = True
                         
                         st.rerun()
-                    st.session_state.floor += 1
+                    
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
-                    st.session_state.floor += 1
+                    
                 
                 
                 
