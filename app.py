@@ -722,7 +722,7 @@ else:
                             new_skill['current_turn'] = 0 # 初期値
                             st.session_state.skills.append(new_skill)
                             st.session_state.log.append(f"スキル「{new_skill['type']}{new_skill['power']}:{new_skill['name']}」を獲得した！")
-                        st.session_state.floor += 1
+                        
                     else:
                         # 所持しているスキル名のリストを作成
                         owned_skill_names = [s['name'] for s in st.session_state.skills]
@@ -742,8 +742,9 @@ else:
                             st.session_state.new_skill_candidate = new_skill
 
                         st.session_state.swapping_mode = True
-                        st.session_state.floor += 1
+                        
                         st.rerun()
+                    st.session_state.floor += 1
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
                     st.session_state.floor += 1
