@@ -685,11 +685,12 @@ else:
         cols = st.columns(3)
         for i, event in enumerate(st.session_state.current_events):
             if cols[i].button(event):
-                st.session_state.floor += 1
+                
                 # 戦闘イベントの例
                 if event == "戦闘":
                     st.session_state.log.append(f"戦闘開始！")
-                    st.session_state.enemy = get_enemy_by_floor(st.session_state.floor).copy()
+                    target_floor = st.session_state.floor
+                    st.session_state.enemy = get_enemy_by_floor(target_floor).copy()
                     st.session_state.battle_mode = True
                     st.session_state.poison_turns = 0
                     st.session_state.poison_damage=0
@@ -743,6 +744,7 @@ else:
                     st.session_state.log.append(f"{event}を実行した。")
                 
                 st.session_state.current_events = random.sample(events, 3)
+                st.session_state.floor += 1
                 st.rerun()
 
         st.write("---")
