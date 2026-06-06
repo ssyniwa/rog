@@ -752,7 +752,7 @@ else:
                     
                 
                 
-                
+                st.session_state.current_events = random.sample(events, 3)
                 st.rerun()
 
         st.write("---")
