@@ -679,7 +679,7 @@ else:
         else:
             # 通常階層ならランダムに3つ
             
-            events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
+            
             st.session_state.current_events = random.sample(events, 3)
 
         cols = st.columns(len(st.session_state.current_events))
