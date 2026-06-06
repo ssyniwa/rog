@@ -579,8 +579,9 @@ else:
                         st.session_state.poison_turn = 3 # 3ターンの間
                         st.session_state.log.append(f"継続ダメージを受けた！毎ターン {enemy_skill['power']} のダメージ！")                # プレイヤーの選択スキルのクールダウンを1減らす
                     
-                if st.session_state.skills[i]['current_turn'] > 0:
-                    st.session_state.skills[i]['current_turn'] -= 1
+                for s in st.session_state.skills:
+                    if s['current_turn'] > 0:
+                        s['current_turn'] -= 1
                 new_buffs = []
                 for buff in st.session_state.active_buffs:
                     buff["remaining_turn"] -= 1
