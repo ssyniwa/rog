@@ -728,12 +728,18 @@ else:
 
         # --- 演出画面の表示 ---
         if st.session_state.get('show_area_intro', False):
-            info = AREA_INFO[st.session_state.floor]
-            st.title(info['name'])
-            st.image(info['img'])
-            st.write(info['desc'])
-            if st.button("冒険へ進む"):
-                st.write("ボタンが押されました！")  # これが表示されるか確認
+            info = AREA_INFO.get(st.session_state.floor)
+            if info:
+                st.title(info['name'])
+                st.image(info['img'])
+                st.write(info['desc'])
+                
+                # ボタンはここのブロックの中だけで生成する
+                if st.button("冒険へ進む"):
+                    st.session_state.show_area_intro = False
+                    st.rerun()
+            else:
+                # infoがない場合の安全策
                 st.session_state.show_area_intro = False
                 st.rerun()
         else:
