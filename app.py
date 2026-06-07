@@ -732,13 +732,14 @@ else:
             info = AREA_INFO.get(st.session_state.floor)
             if info:
                 st.title(info['name'])
-                #st.image(info['img'])
+                st.image(info['img'])
                 st.write(info['desc'])
                 with st.container():
                     # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
                     if st.button("冒険へ進む", key="unique_area_btn"):
                         st.session_state.show_area_intro = False
                         st.rerun()
+                st.stop()
             else:
                 # infoがない場合の安全策
                 st.session_state.show_area_intro = False
