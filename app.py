@@ -20,10 +20,29 @@ CHARACTERS = {
     },
 }
 WEAPON_POOL=[
-    {"name":"初級剣","effect":10}
+    {"name":"錆びた短剣","effect":5},
+    {"name":"木の棍棒","effect":10},
+    {"name":"古の斧","effect":15},
+    {"name":"狩人の弓","effect":20},
+    {"name":"風の魔導杖","effect":35},
+    {"name":"盗賊のナイフ","effect":25},
+    {"name":"騎士のランス","effect":30},
+    {"name":"武士の刀","effect":40},
+    {"name":"影の暗殺剣","effect":45},
+    {"name":"古の聖剣","effect":50}
 ]
+
 ARMOR_POOL=[
-    {"name":"初級盾","effect":10}
+    {"name":"ぼろ布の服","effect":5},
+    {"name":"革の鎧","effect":15},
+    {"name":"鎖帷子","effect":25},
+    {"name":"鉄の盾","effect":20},
+    {"name":"プレートメイル","effect":30},
+    {"name":"魔法使いのローブ","effect":10},
+    {"name":"騎士の円盾","effect":35},
+    {"name":"ドラゴン鱗の鎧","effect":50},
+    {"name":"聖なる守りの盾","effect":40},
+    {"name":"古の魔法壁","effect":60}
 ]
 # 獲得可能なランダムスキルのプール
 WATER_SKILL_POOL = [
@@ -437,6 +456,10 @@ def init_game(char_name):
         st.session_state.weapon = None  # Noneなら未装備
     if 'armor' not in st.session_state:
         st.session_state.armor = None
+    if 'active_weapon_bonus' not in st.session_state:
+        st.session_state.active_weapon_bonus = 0
+    if 'active_armor_bonus' not in st.session_state:
+        st.session_state.active_armor_bonus = 0
     # バフ情報の管理リストを追加
     st.session_state.active_buffs = []
     for s in st.session_state.skills:
@@ -457,7 +480,32 @@ def get_enemy_by_floor(floor):
     
     # 通常階層なら範囲内のmobからランダム
     candidates = [e for e in ENEMIES if e["type"] == "mob" and e["floor_range"][0] <= floor <= e["floor_range"][1]]
-    return random.choice(candidates)        
+    return random.choice(candidates)
+def apply_equip(new_item, equip_type):
+    """装備適用・交換時のロジック"""
+    
+    # 1. 前の効果を打ち消す（減算）
+    if equip_type == "weapon":
+        bonus = st.session_state.active_weapon_bonus
+        for s in st.session_state.skills:
+            if s['type'] == "攻撃": s['power'] -= bonus
+        st.session_state.weapon = new_item
+        st.session_state.active_weapon_bonus = new_item['effect_value']
+    else:
+        bonus = st.session_state.active_armor_bonus
+        for s in st.session_state.skills:
+            if s['type'] == "防御": s['power'] -= bonus
+        st.session_state.armor = new_item
+        st.session_state.active_armor_bonus = new_item['effect_value']
+
+    # 2. 新しい効果を適用（加算）
+    bonus = new_item['effect_value']
+    for s in st.session_state.skills:
+        if equip_type == "weapon" and s['type'] == "攻撃":
+            s['power'] += bonus
+        elif equip_type == "armor" and s['type'] == "防御":
+            s['power'] += bonus
+
 # --- メインロジック ---
 if 'game_started' not in st.session_state:
     st.title("キャラクター選択")
@@ -724,19 +772,12 @@ else:
         if current:
             st.write(f"現在の装備: {current['name']} (効果: {current['effect']})")
             if st.button("交換する"):
-                # 装備の入れ替え処理
-                if st.session_state.equip_type == "weapon": 
-                    st.session_state.weapon = item
-                else: 
-                    st.session_state.armor = item
+                apply_equip(st.session_state.temp_equip, st.session_state.equip_type)
                 st.session_state.equipping_mode = False
                 st.rerun()
         else:
             if st.button("装備する"):
-                if st.session_state.equip_type == "weapon": 
-                    st.session_state.weapon = item
-                else: 
-                    st.session_state.armor = item
+                apply_equip(st.session_state.temp_equip, st.session_state.equip_type)
                 st.session_state.equipping_mode = False
                 st.rerun()
                 
