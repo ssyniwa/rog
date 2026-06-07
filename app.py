@@ -709,6 +709,7 @@ else:
 
     # --- 演出画面の表示 ---
     elif st.session_state.get('show_area_intro', True):
+        st.write(f"DEBUG: 階層={st.session_state.floor}, 演出フラグ={st.session_state.get('show_area_intro')}")
         info = AREA_INFO.get(st.session_state.floor)
         if info:
             st.title(info['name'])
@@ -722,7 +723,7 @@ else:
             st.stop()
         
     else:
-        st.write(f"DEBUG: 階層={st.session_state.floor}, 演出フラグ={st.session_state.get('show_area_intro')}")
+        
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
         st.subheader(f"現在階層: {st.session_state.floor} F")
