@@ -732,7 +732,7 @@ else:
             info = AREA_INFO.get(st.session_state.floor)
             if info:
                 st.title(info['name'])
-                st.image(info['img'])
+                #st.image(info['img'])
                 st.write(info['desc'])
                 with st.container():
                     # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
