@@ -737,7 +737,7 @@ else:
                 with st.container():
                     # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
                     if st.button("冒険へ進む", key="unique_area_btn"):
-                        st.session_state.show_area_intro = False
+                        st.session_state.show_area_intro = True
                         st.rerun()
                 st.stop()
             else:
