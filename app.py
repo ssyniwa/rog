@@ -734,11 +734,11 @@ else:
                 st.title(info['name'])
                 st.image(info['img'])
                 st.write(info['desc'])
-                with st.container():
-                    # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
-                    if st.button("冒険へ進む", key="unique_area_btn"):
-                        st.session_state.show_area_intro = False
-                        st.rerun()
+                
+                # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
+                if st.button("冒険へ進む", key="unique_area_btn"):
+                    st.session_state.show_area_intro = False
+                    st.rerun()
                 st.stop()
             else:
                 # infoがない場合の安全策
@@ -753,7 +753,7 @@ else:
 
             cols = st.columns(len(st.session_state.current_events))
             for i, event in enumerate(st.session_state.current_events):
-                if cols[i].button(event):
+                if cols[i].button(event, key=f"btn_{event}_{i}"):
                     st.session_state.floor += 1
                     # 戦闘イベントの例
                     if event == "戦闘":
