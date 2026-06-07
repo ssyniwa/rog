@@ -735,7 +735,7 @@ else:
                 st.write(info['desc'])
                 
                 # ボタンはここのブロックの中だけで生成する
-                if st.button(f"冒険へ進む (F:{st.session_state.floor})"):
+                if st.button("冒険へ進む", key="area_intro_btn"):
                     st.session_state.show_area_intro = False
                     st.rerun()
             else:
