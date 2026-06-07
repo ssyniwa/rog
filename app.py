@@ -718,7 +718,7 @@ else:
             if st.button("リセット"):
                 del st.session_state.game_started
                 st.rerun()
-
+        st.write(f"現在のステータス: 演出表示中={st.session_state.get('show_area_intro')}, 現在階層={st.session_state.get('floor')}")
         # 戦闘イベント時を想定した画像表示例
         # if st.session_state.current_event == "戦闘": ... とすることで条件分岐可能
         # --- 階層移動時の判定 ---
@@ -733,11 +733,12 @@ else:
                 st.title(info['name'])
                 st.image(info['img'])
                 st.write(info['desc'])
-                
-                # ボタンはここのブロックの中だけで生成する
-                if st.button("冒険へ進む", key="area_intro_btn"):
-                    st.session_state.show_area_intro = False
-                    st.rerun()
+                with st.container():
+                    if st.button("冒険へ進む", key="go_next"):
+                        # ボタンはここのブロックの中だけで生成する
+                        if st.button("冒険へ進む", key="area_intro_btn"):
+                            st.session_state.show_area_intro = False
+                            st.rerun()
             else:
                 # infoがない場合の安全策
                 st.session_state.show_area_intro = False
