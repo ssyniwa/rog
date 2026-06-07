@@ -460,8 +460,20 @@ if 'game_started' not in st.session_state:
                 init_game(name)
                 st.rerun()
 else:
+    if st.session_state.get("game_status") == "gameover":
+        st.error("GAME OVER")
+        if st.button("タイトルに戻る"):
+            st.session_state.clear() # 全データを初期化
+            st.rerun()
+
+    elif st.session_state.get("game_status") == "clear":
+        st.balloons()
+        st.success("完全クリア！おめでとうございます！")
+        if st.button("タイトルに戻る"):
+            st.session_state.clear()
+            st.rerun()
     # --- 戦闘ロジック ---
-    if st.session_state.battle_mode:
+    elif st.session_state.battle_mode:
         # ターン開始時に防御フラグをリセット（これで「次のターンのみ有効」になる）
         st.session_state.player_defending = False
         st.session_state.enemy_defending = False
@@ -623,26 +635,31 @@ else:
                         st.session_state.attack -= buff["power"]
                         st.session_state.speed -= buff["power"] / 10
                     st.session_state.active_buffs = []
-                    
+                    if st.session_state.hp <= 0:
+                        st.session_state.game_status = "gameover"
+                        st.rerun()
                     if st.session_state.enemy['hp'] <= 0:
                         st.session_state.log.append("勝利した！")
-                        # --- 経験値獲得とレベルアップ判定 ---
-                        gained_exp = 50  # 敵ごとに設定しても良い
-                        st.session_state.exp += gained_exp
-                        st.session_state.log.append(f"{gained_exp} の経験値を獲得した！")
-                        
-                        if st.session_state.exp >= st.session_state.exp_to_next:
-                            st.session_state.level += 1
-                            st.session_state.exp -= st.session_state.exp_to_next
-                            st.session_state.exp_to_next = int(st.session_state.exp_to_next * 1.5) # 次のレベルは少し大変に
+                        if st.session_state.floor >= 120:
+                            st.session_state.game_status = "clear"
+                        else:
+                            # --- 経験値獲得とレベルアップ判定 ---
+                            gained_exp = 50  # 敵ごとに設定しても良い
+                            st.session_state.exp += gained_exp
+                            st.session_state.log.append(f"{gained_exp} の経験値を獲得した！")
                             
-                            # ステータス強化
-                            st.session_state.max_hp += 20
-                            st.session_state.hp = st.session_state.max_hp
-                            st.session_state.attack += 10
-                            for st.session_state.skill in st.session_state.skills:
-                                st.session_state.skill['power'] += 10
-                            st.session_state.log.append(f"レベルアップ！Lv.{st.session_state.level}になった！")
+                            if st.session_state.exp >= st.session_state.exp_to_next:
+                                st.session_state.level += 1
+                                st.session_state.exp -= st.session_state.exp_to_next
+                                st.session_state.exp_to_next = int(st.session_state.exp_to_next * 1.5) # 次のレベルは少し大変に
+                                
+                                # ステータス強化
+                                st.session_state.max_hp += 20
+                                st.session_state.hp = st.session_state.max_hp
+                                st.session_state.attack += 10
+                                for st.session_state.skill in st.session_state.skills:
+                                    st.session_state.skill['power'] += 10
+                                st.session_state.log.append(f"レベルアップ！Lv.{st.session_state.level}になった！")
                     else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
