@@ -524,7 +524,10 @@ else:
 
                     if enemy_skill['type'] == "攻撃":
                         if st.session_state.player_defending==True:
-                            enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            if enemy_skill['power']>=st.sssion_state.defense:
+                                enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            else:
+                                enemy_dmg=0
                             st.session_state.player_defending=False
                             st.session_state.defense=0
                         else:
@@ -553,7 +556,10 @@ else:
                 if skill['type']=="攻撃":
                     damage = skill['power']
                     if st.session_state.enemy_defending==True:
-                        st.session_state.enemy['hp'] -= damage-st.session_state.enemy_defense
+                        if damage>=st.session_state.enemy_defense:
+                            st.session_state.enemy['hp'] -= damage-st.session_state.enemy_defense
+                        else:
+                            st.session_state.enemy['hp']-=0
                         st.session_state.enemy_defending=False
                         st.session_state.enemy_defense=0
                     else:
@@ -587,7 +593,10 @@ else:
 
                     if enemy_skill['type'] == "攻撃":
                         if st.session_state.player_defending==True:
-                            enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            if enemy_skill['power']>=st.sssion_state.defense:
+                                enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            else:
+                                enemy_dmg=0
                             st.session_state.player_defending=False
                             st.session_state.defense=0
                         else:
