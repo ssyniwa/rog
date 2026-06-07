@@ -733,6 +733,7 @@ else:
             st.image(info['img'])
             st.write(info['desc'])
             if st.button("冒険へ進む"):
+                st.write("ボタンが押されました！")  # これが表示されるか確認
                 st.session_state.show_area_intro = False
                 st.rerun()
         else:
