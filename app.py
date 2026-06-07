@@ -512,11 +512,13 @@ else:
                     if enemy_skill['type'] == "攻撃":
                         if st.session_state.player_defending==True:
                             enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            st.session_state.player_defending=False
+                            st.session_state.defense=0
                         else:
                             enemy_dmg=enemy_skill['power']
                         st.session_state.hp -= enemy_dmg
                         st.session_state.log.append(f"{enemy_dmg} ダメージを受けた。")
-                        st.session_state.player_defending=False
+                        
                     elif enemy_skill['type'] == "回復":
                         # 敵自身のHPを回復
                         heal_amount = enemy_skill['power']
@@ -526,7 +528,7 @@ else:
                     elif enemy_skill['type'] == "防御":
                         st.session_state.enemy_defending=True
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
-                        st.session_state.enemy["defense"] += enemy_skill['power']
+                        st.session_state.enemy_defense += enemy_skill['power']
                         st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
@@ -538,11 +540,13 @@ else:
                 if skill['type']=="攻撃":
                     damage = skill['power']
                     if st.session_state.enemy_defending==True:
-                        st.session_state.enemy['hp'] -= damage-st.session_state.enemy["defense"]
+                        st.session_state.enemy['hp'] -= damage-st.session_state.enemy_defense
+                        st.session_state.enemy_defending=False
+                        st.session_state.enemy_defense=0
                     else:
                         st.session_state.enemy['hp']-=damage
                     st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
-                    st.session_state.enemy_defending=False
+                    
                 elif skill['type']=="回復":
                     heal = skill['power']
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + heal)
@@ -571,6 +575,8 @@ else:
                     if enemy_skill['type'] == "攻撃":
                         if st.session_state.player_defending==True:
                             enemy_dmg = enemy_skill['power']-st.session_state.defense
+                            st.session_state.player_defending=False
+                            st.session_state.defense=0
                         else:
                             enemy_dmg=enemy_skill['power']
                         st.session_state.hp -= enemy_dmg
@@ -585,7 +591,7 @@ else:
                     elif enemy_skill['type'] == "防御":
                         st.session_state.enemy_defending=True
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
-                        st.session_state.enemy["defense"] += enemy_skill['power']
+                        st.session_state.enemy_defense += enemy_skill['power']
                         st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
 
                     elif enemy_skill['type'] == "継続":
