@@ -409,7 +409,7 @@ ENEMIES = [
 
 def init_game(char_name):
     st.session_state.floor = 1  # 階層の初期値を1に設定
-    st.session_state.show_area_intro = True
+    st.session_state.show_area_intro = False
     stats = CHARACTERS[char_name]
     st.session_state.hp = stats["hp"]
     st.session_state.max_hp = stats["max_hp"]
@@ -728,7 +728,7 @@ else:
             st.rerun() # フラグを立てた直後に再描画して演出画面へ移行させる
 
         # --- 演出画面の表示 ---
-        if st.session_state.get('show_area_intro', False):
+        if st.session_state.get('show_area_intro', True):
             info = AREA_INFO.get(st.session_state.floor)
             if info:
                 st.title(info['name'])
@@ -737,7 +737,7 @@ else:
                 with st.container():
                     # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
                     if st.button("冒険へ進む", key="unique_area_btn"):
-                        st.session_state.show_area_intro = True
+                        st.session_state.show_area_intro = False
                         st.rerun()
                 st.stop()
             else:
