@@ -19,7 +19,12 @@ CHARACTERS = {
         "initial_skill": {"name": "シャドーナイフ", "type": "攻撃", "power": 40, "turn": 1, "image": "image/shadow_skill1.png", "element": "shadow"}
     },
 }
-
+WEAPON_POOL=[
+    {"name":"初級剣","effect":10}
+]
+ARMOR_POOL=[
+    {"name":"初級盾","effect":10}
+]
 # 獲得可能なランダムスキルのプール
 WATER_SKILL_POOL = [
     {"name": "翠明流水沫斬り", "type": "攻撃", "power": 30, "turn": 1, "image": "image/water_a1.png", "element": "water"},  
@@ -428,6 +433,10 @@ def init_game(char_name):
     st.session_state.enemy_defense=0
     st.session_state.player_defending = False
     st.session_state.enemy_defending = False
+    if 'weapon' not in st.session_state:
+        st.session_state.weapon = None  # Noneなら未装備
+    if 'armor' not in st.session_state:
+        st.session_state.armor = None
     # バフ情報の管理リストを追加
     st.session_state.active_buffs = []
     for s in st.session_state.skills:
@@ -705,7 +714,36 @@ else:
         
         st.stop() # 入れ替えモード中は以下のイベント選択を表示しない 
     
+    elif st.session_state.get('equipping_mode'):
+        item = st.session_state.temp_equip
+        current = st.session_state.weapon if st.session_state.equip_type == "weapon" else st.session_state.armor
         
+        st.subheader(f"{item['name']} を発見！")
+        st.write(f"効果: {item['effect']}")
+        
+        if current:
+            st.write(f"現在の装備: {current['name']} (効果: {current['effect']})")
+            if st.button("交換する"):
+                # 装備の入れ替え処理
+                if st.session_state.equip_type == "weapon": 
+                    st.session_state.weapon = item
+                else: 
+                    st.session_state.armor = item
+                st.session_state.equipping_mode = False
+                st.rerun()
+        else:
+            if st.button("装備する"):
+                if st.session_state.equip_type == "weapon": 
+                    st.session_state.weapon = item
+                else: 
+                    st.session_state.armor = item
+                st.session_state.equipping_mode = False
+                st.rerun()
+                
+        if st.button("スルーする"):
+            st.session_state.equipping_mode = False
+            st.rerun()
+        st.stop() # 選択中は以降の処理を停止    
     else:
         
         # --- 通常画面 ---
@@ -833,7 +871,26 @@ else:
                         msg = f"{skill['name']} の威力が10上昇した！"
                     
                     st.session_state.log.append(msg)        
-                                    
+
+                elif event=="武器獲得":
+                    # 装備プールからランダムに選出（WEAPON_POOL, ARMOR_POOLを定義しておくこと）
+                    pool = WEAPON_POOL 
+                    candidate = random.choice(pool)
+                    
+                    st.session_state.temp_equip = candidate
+                    st.session_state.equip_type = "weapon"
+                    st.session_state.equipping_mode = True # 装備選択画面へ移行
+                    st.rerun()
+                elif event=="防具獲得":
+                    # 装備プールからランダムに選出（WEAPON_POOL, ARMOR_POOLを定義しておくこと）
+                    pool = ARMOR_POOL 
+                    candidate = random.choice(pool)
+                    
+                    st.session_state.temp_equip = candidate
+                    st.session_state.equip_type = "armor"
+                    st.session_state.equipping_mode = True # 装備選択画面へ移行
+                    st.rerun()
+
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
                     
