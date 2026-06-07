@@ -815,8 +815,25 @@ else:
 
                         st.session_state.swapping_mode = True
                         
-                        
+                elif event == "ステータス強化":
+                    # 強化対象をランダムに選ぶ
+                    target = random.choice(["max_hp", "speed", "power"])
                     
+                    if target == "max_hp":
+                        st.session_state.max_hp += 10
+                        st.session_state.hp += 10 # 現在HPも回復
+                        msg = "最大HPが10上昇した！"
+                    elif target == "speed":
+                        st.session_state.speed += 2
+                        msg = "スピードが2上昇した！"
+                    elif target == "power":
+                        # 現在装備中のスキルの中からランダムに強化
+                        skill = random.choice(st.session_state.skills)
+                        skill["power"] += 10
+                        msg = f"{skill['name']} の威力が10上昇した！"
+                    
+                    st.session_state.log.append(msg)        
+                                    
                 else:
                     st.session_state.log.append(f"{event}を実行した。")
                     
