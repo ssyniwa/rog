@@ -426,6 +426,8 @@ def init_game(char_name):
     st.session_state.game_started = True
     st.session_state.battle_mode = False
     st.session_state.enemy_defense=0
+    st.session_state.player_defending = False
+    st.session_state.enemy_defending = False
     # バフ情報の管理リストを追加
     st.session_state.active_buffs = []
     for s in st.session_state.skills:
@@ -476,8 +478,7 @@ else:
     # --- 戦闘ロジック ---
     elif st.session_state.battle_mode:
         # ターン開始時に防御フラグをリセット（これで「次のターンのみ有効」になる）
-        st.session_state.player_defending = False
-        st.session_state.enemy_defending = False
+        
         st.title("戦闘中！")
         c1, c2 = st.columns(2)
         # プレイヤー表示
