@@ -1,13 +1,6 @@
 import streamlit as st
 import random
-AREA_INFO = {
-    1: {"name": "エリア1:始まりの草原", "desc": "静かな草原から冒険は始まる。", "img": "image/area1.png"},
-    20: {"name": "エリア2:モンスターの洞窟", "desc": "怪しげな洞窟がある。調査しよう。", "img": "image/area2.png"},
-    40: {"name": "エリア3:燃え盛る火口", "desc": "洞窟を抜けると熱気が漂う危険地帯だった。", "img": "image/area3.png"},
-    60: {"name": "エリア4:極寒の雪山", "desc": "転移門がある。転移門に触れると極寒の地にいた。", "img": "image/area4.png"},
-    80: {"name": "エリア5:近未来都市", "desc": "謎の門がある。門に触れると見たことのない輝く都市にいた。", "img": "image/area5.png"},
-    100: {"name": "エリア6:時空の狭間", "desc": "時空の裂け目が現れ、なすすべなく吸い込まれる。", "img": "image/area6.png"},
-}
+
 # --- データ定義 ---
 CHARACTERS = {
     "水龍の巫女": {
@@ -409,7 +402,7 @@ ENEMIES = [
 
 def init_game(char_name):
     st.session_state.floor = 1  # 階層の初期値を1に設定
-    st.session_state.show_area_intro = False
+
     stats = CHARACTERS[char_name]
     st.session_state.hp = stats["hp"]
     st.session_state.max_hp = stats["max_hp"]
@@ -701,32 +694,31 @@ else:
             st.rerun()
         
         st.stop() # 入れ替えモード中は以下のイベント選択を表示しない 
-    # --- 階層移動時の判定 ---
-    # 階層が1, 20, 40...になった時、かつまだ表示していないなら演出を表示
-    elif st.session_state.floor in AREA_INFO and not st.session_state.get('show_area_intro', False):
-        st.session_state.show_area_intro = True
-        st.rerun() # フラグを立てた直後に再描画して演出画面へ移行させる
-
-    # --- 演出画面の表示 ---
-    elif st.session_state.get('show_area_intro', True):
-        st.write(f"DEBUG: 階層={st.session_state.floor}, 演出フラグ={st.session_state.get('show_area_intro')}")
-        info = AREA_INFO.get(st.session_state.floor)
-        if info:
-            st.title(info['name'])
-            st.image(info['img'])
-            st.write(info['desc'])
-            
-            # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
-            if st.button("冒険へ進む", key="unique_area_btn"):
-                st.session_state.show_area_intro = False
-                st.rerun()
-            st.stop()
+    
         
     else:
         
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
         st.subheader(f"現在階層: {st.session_state.floor} F")
+        if st.session_state.floor==1:
+            st.image("image/area1.png")
+            st.write("エリア1:始まりの草原。静かな草原から冒険は始まる。")
+        elif st.session_state.floor==20:
+            st.image("image/area2.png")
+            st.write("エリア2:モンスターの洞窟。怪しげな洞窟がある。調査しよう。")
+        elif st.session_state.floor==40:
+            st.image("image/area3.png")
+            st.write("エリア3:燃え盛る火口。洞窟を抜けると熱気が漂う危険地帯だった。")
+        elif st.session_state.floor==60:
+            st.image("image/area4.png")
+            st.write("極寒の雪山。転移門がある。転移門に触れると極寒の地にいた。")
+        elif st.session_state.floor==80:
+            st.image("image/area5.png")
+            st.write("エリア5:近未来都市。謎の門がある。門に触れると見たことのない輝く都市にいた。")
+        elif st.session_state.floor==100:
+            st.image("image/area6.png")
+            st.write("エリア6:時空の狭間。時空の裂け目が現れ、なすすべなく吸い込まれる。")
         with st.sidebar:
             st.image(st.session_state.image_path, width='stretch')
             st.header("ステータス")
