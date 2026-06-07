@@ -490,16 +490,16 @@ def apply_equip(new_item, equip_type):
         for s in st.session_state.skills:
             if s['type'] == "攻撃": s['power'] -= bonus
         st.session_state.weapon = new_item
-        st.session_state.active_weapon_bonus = new_item['effect_value']
+        st.session_state.active_weapon_bonus = new_item['effect']
     else:
         bonus = st.session_state.active_armor_bonus
         for s in st.session_state.skills:
             if s['type'] == "防御": s['power'] -= bonus
         st.session_state.armor = new_item
-        st.session_state.active_armor_bonus = new_item['effect_value']
+        st.session_state.active_armor_bonus = new_item['effect']
 
     # 2. 新しい効果を適用（加算）
-    bonus = new_item['effect_value']
+    bonus = new_item['effect']
     for s in st.session_state.skills:
         if equip_type == "weapon" and s['type'] == "攻撃":
             s['power'] += bonus
