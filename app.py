@@ -748,10 +748,10 @@ else:
         if 'current_events' not in st.session_state:
             st.session_state.current_events = random.sample(events, 3)
         
-        btn_key = f"event_{st.session_state.floor}_{i}_{event}"
+        
         cols = st.columns(len(st.session_state.current_events))
         for i, event in enumerate(st.session_state.current_events):
-            if cols[i].button(event, key=btn_key):
+            if cols[i].button(event, key=f"btn_{st.session_state.floor}_{i}"):
                 st.session_state.floor += 1
                 # 戦闘イベントの例
                 if event == "戦闘":
