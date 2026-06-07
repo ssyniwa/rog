@@ -463,7 +463,8 @@ else:
     # --- 戦闘ロジック ---
     if st.session_state.battle_mode:
         # ターン開始時に防御フラグをリセット（これで「次のターンのみ有効」になる）
-        
+        st.session_state.player_defending = False
+        st.session_state.enemy_defending = False
         st.title("戦闘中！")
         c1, c2 = st.columns(2)
         # プレイヤー表示
