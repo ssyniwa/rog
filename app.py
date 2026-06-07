@@ -409,7 +409,7 @@ ENEMIES = [
 
 def init_game(char_name):
     st.session_state.floor = 1  # 階層の初期値を1に設定
-    st.session_state.show_area_intro = False
+    st.session_state.show_area_intro = True
     stats = CHARACTERS[char_name]
     st.session_state.hp = stats["hp"]
     st.session_state.max_hp = stats["max_hp"]
@@ -725,6 +725,7 @@ else:
         # 階層が1, 20, 40...になった時、かつまだ表示していないなら演出を表示
         if st.session_state.floor in AREA_INFO and not st.session_state.get('show_area_intro', False):
             st.session_state.show_area_intro = True
+            st.rerun() # フラグを立てた直後に再描画して演出画面へ移行させる
 
         # --- 演出画面の表示 ---
         if st.session_state.get('show_area_intro', False):
