@@ -734,11 +734,10 @@ else:
                 st.image(info['img'])
                 st.write(info['desc'])
                 with st.container():
-                    if st.button("冒険へ進む", key="go_next"):
-                        # ボタンはここのブロックの中だけで生成する
-                        if st.button("冒険へ進む", key="area_intro_btn"):
-                            st.session_state.show_area_intro = False
-                            st.rerun()
+                    # ボタンはここのブロックの中だけで生成する
+                    if st.button("冒険へ進む", key="area_intro_btn"):
+                        st.session_state.show_area_intro = False
+                        st.rerun()
             else:
                 # infoがない場合の安全策
                 st.session_state.show_area_intro = False
