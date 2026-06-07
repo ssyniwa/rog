@@ -701,6 +701,29 @@ else:
             st.rerun()
         
         st.stop() # 入れ替えモード中は以下のイベント選択を表示しない 
+    # --- 階層移動時の判定 ---
+    # 階層が1, 20, 40...になった時、かつまだ表示していないなら演出を表示
+    elif st.session_state.floor in AREA_INFO and not st.session_state.get('show_area_intro', False):
+        st.session_state.show_area_intro = True
+        st.rerun() # フラグを立てた直後に再描画して演出画面へ移行させる
+
+    # --- 演出画面の表示 ---
+    elif st.session_state.get('show_area_intro', True):
+        info = AREA_INFO.get(st.session_state.floor)
+        if info:
+            st.title(info['name'])
+            st.image(info['img'])
+            st.write(info['desc'])
+            
+            # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
+            if st.button("冒険へ進む", key="unique_area_btn"):
+                st.session_state.show_area_intro = False
+                st.rerun()
+            st.stop()
+        else:
+            # infoがない場合の安全策
+            st.session_state.show_area_intro = False
+            st.rerun()
     else:
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
@@ -721,116 +744,94 @@ else:
         st.write(f"現在のステータス: 演出表示中={st.session_state.get('show_area_intro')}, 現在階層={st.session_state.get('floor')}")
         # 戦闘イベント時を想定した画像表示例
         # if st.session_state.current_event == "戦闘": ... とすることで条件分岐可能
-        # --- 階層移動時の判定 ---
-        # 階層が1, 20, 40...になった時、かつまだ表示していないなら演出を表示
-        if st.session_state.floor in AREA_INFO and not st.session_state.get('show_area_intro', False):
-            st.session_state.show_area_intro = True
-            st.rerun() # フラグを立てた直後に再描画して演出画面へ移行させる
+        
+        
+        st.subheader("次に行う行動を選択")
+        events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
+        if 'current_events' not in st.session_state:
+            st.session_state.current_events = random.sample(events, 3)
+        
 
-        # --- 演出画面の表示 ---
-        if st.session_state.get('show_area_intro', True):
-            info = AREA_INFO.get(st.session_state.floor)
-            if info:
-                st.title(info['name'])
-                st.image(info['img'])
-                st.write(info['desc'])
-                
-                # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
-                if st.button("冒険へ進む", key="unique_area_btn"):
-                    st.session_state.show_area_intro = False
-                    st.rerun()
-                st.stop()
-            else:
-                # infoがない場合の安全策
-                st.session_state.show_area_intro = False
-                st.rerun()
-        else:
-            st.subheader("次に行う行動を選択")
-            events = ["戦闘", "回復", "武器獲得", "防具獲得", "ショップ", "スキル獲得", "ステータス強化"]
-            if 'current_events' not in st.session_state:
-                st.session_state.current_events = random.sample(events, 3)
-            
-
-            cols = st.columns(len(st.session_state.current_events))
-            for i, event in enumerate(st.session_state.current_events):
-                if cols[i].button(event, key=f"btn_{event}_{i}"):
-                    st.session_state.floor += 1
-                    # 戦闘イベントの例
-                    if event == "戦闘":
-                        st.session_state.log.append(f"戦闘開始！")
-                        target_floor = st.session_state.floor
-                        st.session_state.enemy = get_enemy_by_floor(target_floor).copy()
-                        st.session_state.battle_mode = True
-                        st.session_state.poison_turns = 0
-                        st.session_state.poison_damage=0
-                        for s in st.session_state.skills:
-                            s['current_turn'] = 0
+        cols = st.columns(len(st.session_state.current_events))
+        for i, event in enumerate(st.session_state.current_events):
+            if cols[i].button(event, key=f"btn_{event}_{i}"):
+                st.session_state.floor += 1
+                # 戦闘イベントの例
+                if event == "戦闘":
+                    st.session_state.log.append(f"戦闘開始！")
+                    target_floor = st.session_state.floor
+                    st.session_state.enemy = get_enemy_by_floor(target_floor).copy()
+                    st.session_state.battle_mode = True
+                    st.session_state.poison_turns = 0
+                    st.session_state.poison_damage=0
+                    for s in st.session_state.skills:
+                        s['current_turn'] = 0
+                    
+                    
+                    
+                elif event == "回復":
+                    st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
+                    st.session_state.log.append("HPを回復した。")
+                    
+                elif event == "スキル獲得":
+                    if len(st.session_state.skills) < 5:
+                        # 所持しているスキル名のリストを作成
+                        owned_skill_names = [s['name'] for s in st.session_state.skills]
                         
-                        
-                        
-                    elif event == "回復":
-                        st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + 20)
-                        st.session_state.log.append("HPを回復した。")
-                        
-                    elif event == "スキル獲得":
-                        if len(st.session_state.skills) < 5:
-                            # 所持しているスキル名のリストを作成
-                            owned_skill_names = [s['name'] for s in st.session_state.skills]
-                            
-                            # キャラクターに応じたプールから、所持していないものだけを抽出
-                            if st.session_state.char_name == "水龍の巫女":
-                                pool = WATER_SKILL_POOL
-                            elif st.session_state.char_name == "風の魔女":
-                                pool = WIND_SKILL_POOL
-                            else:
-                                pool = SHADOW_SKILL_POOL
-                                
-                            available_skills = [s for s in pool if s['name'] not in owned_skill_names]
-                            
-                            if available_skills:
-                                new_skill = random.choice(available_skills).copy()
-                                new_skill['current_turn'] = 0 # 初期値
-                                st.session_state.skills.append(new_skill)
-                                st.session_state.log.append(f"スキル「{new_skill['type']}{new_skill['power']}:{new_skill['name']}」を獲得した！")
-                            
+                        # キャラクターに応じたプールから、所持していないものだけを抽出
+                        if st.session_state.char_name == "水龍の巫女":
+                            pool = WATER_SKILL_POOL
+                        elif st.session_state.char_name == "風の魔女":
+                            pool = WIND_SKILL_POOL
                         else:
-                            # 所持しているスキル名のリストを作成
-                            owned_skill_names = [s['name'] for s in st.session_state.skills]
+                            pool = SHADOW_SKILL_POOL
                             
-                            # キャラクターに応じたプールから、所持していないものだけを抽出
-                            if st.session_state.char_name == "水龍の巫女":
-                                pool = WATER_SKILL_POOL
-                            elif st.session_state.char_name == "風の魔女":
-                                pool = WIND_SKILL_POOL
-                            else:
-                                pool = SHADOW_SKILL_POOL
-                                
-                            available_skills = [s for s in pool if s['name'] not in owned_skill_names]
-                            
-                            if available_skills:
-                                new_skill = random.choice(available_skills).copy()
-                                st.session_state.new_skill_candidate = new_skill
-
-                            st.session_state.swapping_mode = True
-                            
-                            
+                        available_skills = [s for s in pool if s['name'] not in owned_skill_names]
+                        
+                        if available_skills:
+                            new_skill = random.choice(available_skills).copy()
+                            new_skill['current_turn'] = 0 # 初期値
+                            st.session_state.skills.append(new_skill)
+                            st.session_state.log.append(f"スキル「{new_skill['type']}{new_skill['power']}:{new_skill['name']}」を獲得した！")
                         
                     else:
-                        st.session_state.log.append(f"{event}を実行した。")
+                        # 所持しているスキル名のリストを作成
+                        owned_skill_names = [s['name'] for s in st.session_state.skills]
                         
-                    # 階層が20の倍数（ボス階層）の場合は「戦闘」のみにする
-                    if st.session_state.floor % 20 == 19:
-                        st.session_state.current_events = ["戦闘"]
-                        st.session_state.log.append("エリアボスが出現！")
-                    else:
-                        # 通常階層ならランダムに3つ
+                        # キャラクターに応じたプールから、所持していないものだけを抽出
+                        if st.session_state.char_name == "水龍の巫女":
+                            pool = WATER_SKILL_POOL
+                        elif st.session_state.char_name == "風の魔女":
+                            pool = WIND_SKILL_POOL
+                        else:
+                            pool = SHADOW_SKILL_POOL
+                            
+                        available_skills = [s for s in pool if s['name'] not in owned_skill_names]
                         
-                        
-                        st.session_state.current_events = random.sample(events, 3)
-                    
-                    
-                    st.rerun()
+                        if available_skills:
+                            new_skill = random.choice(available_skills).copy()
+                            st.session_state.new_skill_candidate = new_skill
 
-            st.write("---")
-            for msg in reversed(st.session_state.log):
-                st.write(f"- {msg}")
+                        st.session_state.swapping_mode = True
+                        
+                        
+                    
+                else:
+                    st.session_state.log.append(f"{event}を実行した。")
+                    
+                # 階層が20の倍数（ボス階層）の場合は「戦闘」のみにする
+                if st.session_state.floor % 20 == 19:
+                    st.session_state.current_events = ["戦闘"]
+                    st.session_state.log.append("エリアボスが出現！")
+                else:
+                    # 通常階層ならランダムに3つ
+                    
+                    
+                    st.session_state.current_events = random.sample(events, 3)
+                
+                
+                st.rerun()
+
+        st.write("---")
+        for msg in reversed(st.session_state.log):
+            st.write(f"- {msg}")
