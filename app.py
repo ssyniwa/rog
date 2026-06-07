@@ -735,8 +735,8 @@ else:
                 st.image(info['img'])
                 st.write(info['desc'])
                 with st.container():
-                    # ボタンはここのブロックの中だけで生成する
-                    if st.button("冒険へ進む", key="area_intro_btn"):
+                    # 【重要】キーを明示的に指定し、このボタンを最優先で表示する
+                    if st.button("冒険へ進む", key="unique_area_btn"):
                         st.session_state.show_area_intro = False
                         st.rerun()
             else:
