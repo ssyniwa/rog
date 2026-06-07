@@ -720,10 +720,7 @@ else:
                 st.session_state.show_area_intro = False
                 st.rerun()
             st.stop()
-        else:
-            # infoがない場合の安全策
-            st.session_state.show_area_intro = False
-            st.rerun()
+        
     else:
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
@@ -751,10 +748,10 @@ else:
         if 'current_events' not in st.session_state:
             st.session_state.current_events = random.sample(events, 3)
         
-
+        btn_key = f"event_{st.session_state.floor}_{i}_{event}"
         cols = st.columns(len(st.session_state.current_events))
         for i, event in enumerate(st.session_state.current_events):
-            if cols[i].button(event, key=f"btn_{event}_{i}"):
+            if cols[i].button(event, key=btn_key):
                 st.session_state.floor += 1
                 # 戦闘イベントの例
                 if event == "戦闘":
