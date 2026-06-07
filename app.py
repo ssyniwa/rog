@@ -722,6 +722,7 @@ else:
             st.stop()
         
     else:
+        st.write(f"DEBUG: 階層={st.session_state.floor}, 演出フラグ={st.session_state.get('show_area_intro')}")
         # --- 通常画面 ---
         st.title(f"冒険者: {st.session_state.char_name}")
         st.subheader(f"現在階層: {st.session_state.floor} F")
