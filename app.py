@@ -462,6 +462,9 @@ if 'game_started' not in st.session_state:
 else:
     # --- 戦闘ロジック ---
     if st.session_state.battle_mode:
+        # ターン開始時に防御フラグをリセット（これで「次のターンのみ有効」になる）
+        st.session_state.player_defending = False
+        st.session_state.enemy_defending = False
         st.title("戦闘中！")
         c1, c2 = st.columns(2)
         # プレイヤー表示
@@ -507,7 +510,10 @@ else:
                     st.session_state.log.append(f"敵は「{enemy_skill['name']}」を使った！")
 
                     if enemy_skill['type'] == "攻撃":
-                        enemy_dmg = enemy_skill['power']-st.session_state.defense
+                        if st.session_state.player_defending==True:
+                            enemy_dmg = enemy_skill['power']-st.session_state.defense
+                        else:
+                            enemy_dmg=enemy_skill['power']
                         st.session_state.hp -= enemy_dmg
                         st.session_state.log.append(f"{enemy_dmg} ダメージを受けた。")
                     elif enemy_skill['type'] == "回復":
@@ -517,6 +523,7 @@ else:
                         st.session_state.log.append(f"敵の体力が {heal_amount} 回復した。")
 
                     elif enemy_skill['type'] == "防御":
+                        st.session_state.enemy_defending=True
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
                         st.session_state.enemy["defense"] += enemy_skill['power']
                         st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
@@ -529,13 +536,17 @@ else:
                 # 戦闘処理（簡易版）
                 if skill['type']=="攻撃":
                     damage = skill['power']
-                    st.session_state.enemy['hp'] -= damage-st.session_state.enemy["defense"]
+                    if st.session_state.enemy_defending==True:
+                        st.session_state.enemy['hp'] -= damage-st.session_state.enemy["defense"]
+                    else:
+                        st.session_state.enemy['hp']-=damage
                     st.session_state.log.append(f"{skill['name']}で {damage} ダメージを与えた！")
                 elif skill['type']=="回復":
                     heal = skill['power']
                     st.session_state.hp = min(st.session_state.max_hp, st.session_state.hp + heal)
                     st.session_state.log.append(f"{skill['name']}で {heal} HPを回復した！")
                 elif skill['type']=="防御":
+                    st.session_state.player_defending=True
                     st.session_state.defense += skill['power']
                     st.session_state.log.append(f"{skill['name']}で防御力が {skill['power']} 上がった！")
                 elif skill['type']=="強化":
@@ -556,7 +567,10 @@ else:
                     st.session_state.log.append(f"敵は「{enemy_skill['name']}」を使った！")
 
                     if enemy_skill['type'] == "攻撃":
-                        enemy_dmg = enemy_skill['power']-st.session_state.defense
+                        if st.session_state.player_defending==True:
+                            enemy_dmg = enemy_skill['power']-st.session_state.defense
+                        else:
+                            enemy_dmg=enemy_skill['power']
                         st.session_state.hp -= enemy_dmg
                         st.session_state.log.append(f"{enemy_dmg} ダメージを受けた。")
                     elif enemy_skill['type'] == "回復":
@@ -566,7 +580,7 @@ else:
                         st.session_state.log.append(f"敵の体力が {heal_amount} 回復した。")
 
                     elif enemy_skill['type'] == "防御":
-                        
+                        st.session_state.enemy_defending=True
                         # 敵の防御力を一時的に上げるなどの処理（例：一時的なダメージ無効化フラグなど）
                         st.session_state.enemy["defense"] += enemy_skill['power']
                         st.session_state.log.append(f"敵は身構えて{enemy_skill['power']}防御を固めた！")
