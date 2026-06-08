@@ -583,7 +583,7 @@ else:
 
                     if enemy_skill['type'] == "攻撃":
                         if st.session_state.player_defending==True:
-                            if enemy_skill['power']>=st.sssion_state.defense:
+                            if enemy_skill['power']>=st.session_state.defense:
                                 enemy_dmg = enemy_skill['power']-st.session_state.defense
                             else:
                                 enemy_dmg=0
