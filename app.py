@@ -796,8 +796,8 @@ else:
         
         # 販売アイテムの定義
         shop_items = [
-            {"name": "スキル強化石", "cost": 500, "effect": "スキル威力+50"},
-            {"name": "ドラゴンの血", "cost": 1000, "effect": "スキル威力+100"}
+            {"name": "スキル強化石", "cost": 200, "effect": "スキル威力+50"},
+            {"name": "ドラゴンの血", "cost": 500, "effect": "スキル威力+100"}
         ]
         
         for item in shop_items:
