@@ -441,7 +441,8 @@ def init_game(char_name):
     st.session_state.level = 1
     st.session_state.exp = 0
     st.session_state.exp_to_next = 100  # 次のレベルに必要な経験値
-    st.session_state.money = 0
+    if 'gold' not in st.session_state:
+        st.session_state.gold = 0
     st.session_state.char_name = char_name
     st.session_state.skills = [stats["initial_skill"]]
     st.session_state.image_path = stats["image_path"]
@@ -728,6 +729,9 @@ else:
                                 for st.session_state.skill in st.session_state.skills:
                                     st.session_state.skill['power'] += 10
                                 st.session_state.log.append(f"レベルアップ！Lv.{st.session_state.level}になった！")
+                            gold_gain = random.randint(10, 30) # 獲得額をランダムに設定
+                            st.session_state.gold += gold_gain
+                            st.session_state.log.append(f" {gold_gain} ゴールドを獲得した！")    
                     else:
                         st.session_state.log.append("敗北した...")
                     st.session_state.battle_mode = False
@@ -784,7 +788,35 @@ else:
         if st.button("スルーする"):
             st.session_state.equipping_mode = False
             st.rerun()
-        st.stop() # 選択中は以降の処理を停止    
+        st.stop() # 選択中は以降の処理を停止 
+    # --- ショップ画面の表示（通常画面の分岐内） ---
+    elif st.session_state.get('shop_mode'):
+        st.title("ショップ")
+        st.write(f"所持ゴールド: {st.session_state.gold}")
+        
+        # 販売アイテムの定義
+        shop_items = [
+            {"name": "スキル強化石", "cost": 500, "effect": "スキル威力+50"},
+            {"name": "ドラゴンの血", "cost": 1000, "effect": "スキル威力+100"}
+        ]
+        
+        for item in shop_items:
+            if st.button(f"{item['name']} ({item['cost']}G)"):
+                if st.session_state.gold >= item['cost']:
+                    st.session_state.gold -= item['cost']
+                    # 購入処理: スキル強化
+                    target_skill = random.choice(st.session_state.skills)
+                    bonus = 20 if "特大" not in item['name'] else 60
+                    target_skill['power'] += bonus
+                    st.session_state.log.append(f"{item['name']}を購入し、{target_skill['name']}を強化した！")
+                    st.rerun()
+                else:
+                    st.error("ゴールドが足りません！")
+        
+        if st.button("店を出る"):
+            st.session_state.shop_mode = False
+            st.rerun()
+        st.stop()       
     else:
         
         # --- 通常画面 ---
@@ -932,8 +964,11 @@ else:
                     st.session_state.equipping_mode = True # 装備選択画面へ移行
                     st.rerun()
 
-                else:
-                    st.session_state.log.append(f"{event}を実行した。")
+                elif event == "ショップ":
+                    st.session_state.shop_mode = True
+                    st.rerun()
+
+                
                     
                 # 階層が20の倍数（ボス階層）の場合は「戦闘」のみにする
                 if st.session_state.floor % 20 == 19:
