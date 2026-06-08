@@ -958,7 +958,7 @@ else:
                     st.session_state.temp_equip = candidate
                     st.session_state.equip_type = "weapon"
                     st.session_state.equipping_mode = True # 装備選択画面へ移行
-                    st.rerun()
+                    
                 elif event=="防具獲得":
                     # 装備プールからランダムに選出（WEAPON_POOL, ARMOR_POOLを定義しておくこと）
                     pool = ARMOR_POOL 
@@ -967,11 +967,11 @@ else:
                     st.session_state.temp_equip = candidate
                     st.session_state.equip_type = "armor"
                     st.session_state.equipping_mode = True # 装備選択画面へ移行
-                    st.rerun()
+                    
 
                 elif event == "ショップ":
                     st.session_state.shop_mode = True
-                    st.rerun()
+                   
 
                 
                     
