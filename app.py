@@ -847,10 +847,10 @@ else:
             st.write(f"Lv: {st.session_state.level}") # 追加
             st.write(f"EXP: {st.session_state.exp} / {st.session_state.exp_to_next}") # 追加
             st.write(f"GOLD:{st.session_state.gold}")
-            for a in st.session_state.weapon:
-                st.write(f"武器:{a["name"]}")
-            for a in st.session_state.armor:
-                st.write(f"防具:{a["name"]}")
+            
+            st.write(f"武器:{st.session_state.weapon}")
+        
+            st.write(f"防具:{st.session_state.armor}")
             st.write(f"攻撃力: {st.session_state.attack}")
             st.subheader("所持スキル")
             for s in st.session_state.skills:
